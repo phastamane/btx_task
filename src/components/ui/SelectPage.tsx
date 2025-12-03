@@ -18,10 +18,10 @@ export default function SelectPage({
   );
   return (
     <Select
-      className="max-w-xs 'text-blue-500'"
+      className="max-w-xs"
       classNames={{
-        mainWrapper: "text-blue-500 w-15",
-        trigger: "text-blue-600 bg-transparent ",
+        mainWrapper: "text-blue-500 w-15 ",
+        trigger: "text-blue-600 bg-transparent shadow-none cursor-pointer",
         selectorIcon: "text-blue-600",
         value: "text-blue-600!",
         popoverContent: "text-blue-500",

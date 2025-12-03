@@ -1,0 +1,1 @@
+export type SortableColumn = "id" | "views" | "likes" | "comments";

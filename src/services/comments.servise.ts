@@ -1,6 +1,6 @@
 import { api } from "./api";
 
-const url = 'https://dummyjson.com/comments'
+const url = 'https://dummyjson.com/comments?limit=0'
 
 export const CommentsServise = {
     getAll(){
