@@ -1,4 +1,4 @@
-import DataTable from "@/components/ui/Table";
+import DataTable from "@/components/posts/PostsTable";
 import { DataTableType } from "./posts";
 export interface InputProps{
     page: number

@@ -1,5 +1,5 @@
 import { Input as HeroUIInput } from "@heroui/react";
-import { SearchIcon } from "../icons/SideBarIcons";
+import { SearchIcon } from "../icons/Icons";
 
 export default function InputSearch({
   filterValue,

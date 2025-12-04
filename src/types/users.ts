@@ -2,6 +2,7 @@ export interface UserInterface {
   id: number;
   firstName: string;
   lastName: string;
+  birthDate: string;
   age: number;
   gender: string;
   email: string;

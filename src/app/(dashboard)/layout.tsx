@@ -1,24 +1,34 @@
 "use client";
+
 import { Button } from "@heroui/react";
+import { useRouter } from "next/navigation"; // ← ПРАВИЛЬНО
 import {
   UsersIcon,
   AdminsIcon,
   PostsIcon,
-  ExitIcon
-} from "@/components/icons/SideBarIcons";
-import {QueryClient, QueryClientProvider } from "@tanstack/react-query";
- const queryClient = new QueryClient()
-export default function DashboardLayout({children}: Readonly<{children: React.ReactNode;}>) {
+  ExitIcon,
+} from "@/components/icons/Icons";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter(); // ← работает
+
   const buttons = [
-    { icon: PostsIcon, desc: "Публикации" },
-    { icon: AdminsIcon, desc: "Администраторы" },
-    { icon: UsersIcon, desc: "Пользователи" },
+    { icon: PostsIcon, desc: "Публикации", link: "/posts" },
+    { icon: AdminsIcon, desc: "Администраторы", link: "/admins" },
+    { icon: UsersIcon, desc: "Пользователи", link: "/users" },
   ];
 
   return (
     <div className="h-screen flex pb-10 bg-blue-100">
       <div className="flex flex-col w-1/6 p-8 pb-21 justify-between bg-white">
-        <div className="flex flex-col justify-self-center items-center" >
+        <div className="flex flex-col items-center">
           <div className="pb-10">
             <img src="/BTX.svg" alt="logo" />
           </div>
@@ -28,7 +38,13 @@ export default function DashboardLayout({children}: Readonly<{children: React.Re
               const Icon = button.icon;
               return (
                 <div className="flex" key={button.desc}>
-                  <Button color="primary" variant="light" className="justify-start w-55 text-black" startContent={<Icon/>}>
+                  <Button
+                    onClick={() => router.push(button.link)}
+                    color="primary"
+                    variant="light"
+                    className="justify-start w-55 text-black"
+                    startContent={<Icon />}
+                  >
                     {button.desc}
                   </Button>
                 </div>
@@ -38,23 +54,26 @@ export default function DashboardLayout({children}: Readonly<{children: React.Re
         </div>
 
         <div className="flex flex-col bg-blue-50 p-3 rounded-xl">
-            <div className="flex items-start">
-              <img src="admins.svg" alt="" />
-
-              <div className="grid items-start">
-                <p>name</p>
-                <p className="text-[#006fee] text-bold">username</p>
-              </div>
+          <div className="flex items-start">
+            <img src="admins.svg" alt="" />
+            <div className="grid items-start">
+              <p>name</p>
+              <p className="text-[#006fee] font-bold">username</p>
             </div>
-            <Button className="bg-blue-200 text-[#006fee]" startContent={<ExitIcon/>}>Выход</Button>
-
+          </div>
+          <Button
+            className="bg-blue-200 text-[#006fee]"
+            startContent={<ExitIcon />}
+          >
+            Выход
+          </Button>
         </div>
       </div>
 
       <div className="w-full bg-blue-100">
-
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
       </div>
     </div>
   );

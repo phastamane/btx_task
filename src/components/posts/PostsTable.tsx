@@ -17,21 +17,12 @@ import type { DataTableType, Post } from "@/types/posts";
 import type { UserTableType } from "@/types/users";
 import type { CommentTableType } from "@/types/comments";
 import type { SortableColumn } from "@/types/sortableColumn";
-import InputSearch from "./Input";
-import Pagination from "./Pagination";
-import SelectPage from "./SelectPage";
+import InputSearch from "../ui/Input";
+import Pagination from "../ui/Pagination";
+import SelectPage from "../ui/SelectPage";
+import { POST_COLUMNS } from "@/shared/constants/posts.constants";
 
-const columns = [
-  { key: "id", label: "ID", sorting: true },
-  { key: "title", label: "Пост", sorting: false },
-  { key: "author", label: "Автор", sorting: false },
-  { key: "views", label: "Просмотры", sorting: true },
-  { key: "likes", label: "Лайки", sorting: true },
-  { key: "comments", label: "Коментарии", sorting: true },
-  { key: "button", label: "", sorting: false },
-];
-
-export default function DataTable({
+export default function PostsTable({
   posts,
   users,
   comments,
@@ -96,7 +87,6 @@ export default function DataTable({
 
     return sorted;
   }, [filteredPosts, sortDescriptor, comments]);
-
   // -----------------------------
   // ПАГИНАЦИЯ
   // -----------------------------
@@ -135,7 +125,7 @@ export default function DataTable({
       }
       bottomContentPlacement="outside"
     >
-      <TableHeader columns={columns}>
+      <TableHeader columns={POST_COLUMNS}>
         {(column) => (
           <TableColumn
             key={column.key}
@@ -155,6 +145,8 @@ export default function DataTable({
         {(item: Post) => (
           <TableRow key={item.id}>
             {(columnKey) => {
+              if (columnKey === "title")
+                return <TableCell><p className="font-semibold">{item.title}</p></TableCell>;
               if (columnKey === "likes")
                 return <TableCell>{item.reactions.likes}</TableCell>;
 
@@ -196,8 +188,12 @@ export default function DataTable({
               if (columnKey === "button") {
                 return (
                   <TableCell className="max-w-1">
-                    <div >
-                      <img className="cursor-pointer" src="/arrow-button.svg" alt="" />
+                    <div>
+                      <img
+                        className="cursor-pointer"
+                        src="/arrow-button.svg"
+                        alt=""
+                      />
                     </div>
                   </TableCell>
                 );
