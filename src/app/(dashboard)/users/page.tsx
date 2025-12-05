@@ -1,9 +1,64 @@
-import React from 'react'
+"use client";
+import { useUsers } from "@/hooks/useUsers";
+import { Spinner } from "@heroui/react";
+import AdminsTable from "@/components/admins/AdminsTable";
+import { I18nProvider } from "@react-aria/i18n";
+import Modal from "@/components/ui/Modal";
+import { USERS_CONST } from "@/shared/constants/users.constants";
+import UsersTable from "@/components/users/UsersTable";
+import { usePosts } from "@/hooks/usePosts";
+import { useComments } from "@/hooks/useComments";
 
-function UserPage() {
+function UsersPage() {
+  const {
+    users,
+    isLoading: usersLoading,
+    isError: usersError,
+    error: usersErrorData,
+  } = useUsers();
+
+  const { usersPostsMap } = usePosts();
+  const { userCommentsMap } = useComments();
+
+  if (usersLoading) {
+    return (
+      <div className="flex justify-center pt-40">
+        <Spinner size="lg" label="Загрузка данных..." />
+      </div>
+    );
+  }
+
+  if (usersError) {
+    return (
+      <div className="text-red-600 text-xl p-10">
+        Ошибка загрузки данных:
+        <pre>{usersErrorData?.message}</pre>
+      </div>
+    );
+  }
   return (
-    <div>UserPage</div>
-  )
+    <>
+      <I18nProvider locale="ru-RU">
+        <div className="px-20 pt-20">
+          <div className="grid gap-3 mb-10">
+            <div className="flex justify-between">
+              <h1 className="text-3xl font-semibold">{USERS_CONST.title}</h1>
+              <Modal page="users" />
+            </div>
+            <p className="text-gray-700 text-lg">{USERS_CONST.subTitle}</p>
+          </div>
+
+          {users && usersPostsMap.size > 0 && userCommentsMap.size > 0 && (
+            <UsersTable
+              users={users}
+              usersPosts={usersPostsMap}
+              userComments={userCommentsMap}
+            />
+          )}
+        </div>
+      </I18nProvider>
+    </>
+  );
 }
 
-export default UserPage
+export default UsersPage;

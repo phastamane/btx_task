@@ -12,14 +12,17 @@ export function useUsers() {
   const { admins, userMap } = useMemo(() => {
     const map = new Map<number, UserInterface>();
     const adminsArr: UserInterface[] = [];
+    const usersArr: UserInterface[] = [];
 
     data?.users?.forEach((el: UserInterface) => {
       map.set(el.id, el);
       if (el.role === "admin") adminsArr.push(el);
+      else usersArr.push(el)
     });
 
     return {
       admins: adminsArr,
+      users: usersArr,
       userMap: map,
     };
   }, [data]);
@@ -31,5 +34,6 @@ export function useUsers() {
     users: data?.users ?? [],
     userMap,
     admins,
+
   };
 }

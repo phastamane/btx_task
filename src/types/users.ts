@@ -1,6 +1,7 @@
 export interface UserInterface {
   id: number;
   firstName: string;
+  maidenName:string;
   lastName: string;
   birthDate: string;
   age: number;

@@ -20,7 +20,7 @@ export default function SelectPage({
     <Select
       className="max-w-xs"
       classNames={{
-        mainWrapper: "text-blue-500 w-15 ",
+        mainWrapper: "text-blue-500 max-w-17 ",
         trigger: "text-blue-600 bg-transparent shadow-none cursor-pointer",
         selectorIcon: "text-blue-600",
         value: "text-blue-600!",
@@ -32,7 +32,7 @@ export default function SelectPage({
         const value = Array.from(keys)[0];
         setSelectedKeys(new Set([value]));
         setSelectedPage(Number(value));
-        setPage(Number(value)); // если table state
+        setPage(Number(value));
       }}
       label="Показывать на странице"
       labelPlacement="outside-left"

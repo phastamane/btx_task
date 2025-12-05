@@ -7,21 +7,17 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Spinner,
   SortDescriptor,
   getKeyValue,
 } from "@heroui/react";
 
-import React from "react";
-import type { DataTableType, Post } from "@/types/posts";
+import React, { useState } from "react";
 import type { UserInterface } from "@/types/users";
-import type { CommentTableType } from "@/types/comments";
-import type { SortableColumn } from "@/types/sortableColumn";
 import InputSearch from "../ui/Input";
 import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { ADMINS_COLUMNS } from "@/shared/constants/admins.constants";
-import { SortableColumnAdmins } from "@/types/sortableColumnAdmins";
+import { SortableColumnAdmins } from "@/types/sortableColumn";
 import { formatDateRu, pluralAge } from "@/utils/formatDate";
 import DropDown from "../ui/DropDown";
 

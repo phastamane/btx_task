@@ -26,8 +26,8 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="h-screen flex pb-10 bg-blue-100">
-      <div className="flex flex-col w-1/6 p-8 pb-21 justify-between bg-white">
+    <div className=" flex bg-blue-100">
+      <div className="flex flex-col w-1/6 p-6 pb-21 justify-between bg-white">
         <div className="flex flex-col items-center">
           <div className="pb-10">
             <img src="/BTX.svg" alt="logo" />
@@ -70,7 +70,7 @@ export default function DashboardLayout({
         </div>
       </div>
 
-      <div className="w-full bg-blue-100">
+      <div className="w-full bg-blue-100 pb-5 min-h-[100dvh]">
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

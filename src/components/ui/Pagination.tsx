@@ -16,6 +16,7 @@ export default function Pagination({page, setPage, pageCount}:PaginationProps) {
               next: "bg-transparent text-blue-500 cursor-pointer",
               prev: "bg-transparent text-blue-500 cursor-pointer",
               cursor: "rounded-none",
+              
             }}
     />
   )

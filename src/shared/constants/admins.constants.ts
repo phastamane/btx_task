@@ -1,3 +1,4 @@
+
 export const ADMINS_COLUMNS = [
   { key: "fullName", label: "Администратор" },
   { key: "email", label: "Email", sorting: false },
@@ -9,5 +10,8 @@ export const ADMINS_COLUMNS = [
 
 export const ADMINS_CONST = {
     title: 'Администраторы',
-    subTitle: 'Управление администраторами системы'
+    subTitle: 'Управление администраторами системы',
+    button: "Добавить администратора",
+    modalTitle: 'Добавление администратора',
+    modalButton: 'Сохранить'
 }
