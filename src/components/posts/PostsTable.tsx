@@ -16,11 +16,12 @@ import React from "react";
 import type { DataTableType, Post } from "@/types/posts";
 import type { UserTableType } from "@/types/users";
 import type { CommentTableType } from "@/types/comments";
-import type { SortableColumn } from "@/types/sortableColumn";
+import type { SortableColumnPosts } from "@/types/sortableColumn";
 import InputSearch from "../ui/Input";
 import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { POST_COLUMNS } from "@/shared/constants/posts.constants";
+import { postsRenderCell } from "./postsRenderCell";
 
 export default function PostsTable({
   posts,
@@ -57,7 +58,7 @@ export default function PostsTable({
     const sorted = [...filteredPosts];
 
     sorted.sort((a, b) => {
-      const col = sortDescriptor.column as SortableColumn;
+      const col = sortDescriptor.column as SortableColumnPosts;
 
       let x: any;
       let y: any;
@@ -102,7 +103,13 @@ export default function PostsTable({
       aria-label="Table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
-      classNames={{ table: "min-h-auto text-gray-800" }}
+      classNames={{
+        table: "text-gray-800",
+        base: "max-h-full",
+        th: "text-gray-500 bg-white font-sm",
+        tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
+        wrapper: "pt-0 px-0",
+      }}
       topContent={
         <InputSearch
           filterValue={filterValue}
@@ -144,63 +151,13 @@ export default function PostsTable({
       <TableBody items={items} emptyContent="Ничего не найдено">
         {(item: Post) => (
           <TableRow key={item.id}>
-            {(columnKey) => {
-              if (columnKey === "title")
-                return <TableCell><p className="font-semibold">{item.title}</p></TableCell>;
-              if (columnKey === "likes")
-                return <TableCell>{item.reactions.likes}</TableCell>;
+            {(columnKey) => (
 
-              if (columnKey === "author") {
-                const author = users.get(item.userId);
-                return (
-                  <TableCell>
-                    <div className="flex gap-2 items-center min-h-6">
-                      {author?.image ? (
-                        <img
-                          className="max-w-6"
-                          src={author.image}
-                          alt="User avatar"
-                        />
-                      ) : (
-                        <img
-                          className="max-w-6"
-                          src="/no-avatar-user.svg"
-                          alt="Cant such user avatar"
-                        />
-                      )}
-                      {author
-                        ? `${author.firstName} ${author.lastName}`
-                        : "Unknown"}
-                    </div>
-                  </TableCell>
-                );
-              }
-
-              if (columnKey === "comments") {
-                return (
-                  <TableCell className="flex justify-center text-center">
-                    {comments?.get(item.id)
-                      ? `${comments?.get(item.id)?.comments.length}`
-                      : 0}
-                  </TableCell>
-                );
-              }
-              if (columnKey === "button") {
-                return (
-                  <TableCell className="max-w-1">
-                    <div>
-                      <img
-                        className="cursor-pointer"
-                        src="/arrow-button.svg"
-                        alt=""
-                      />
-                    </div>
-                  </TableCell>
-                );
-              }
-
-              return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
-            }}
+              
+              <TableCell>
+                {postsRenderCell(item, columnKey, users, comments)}
+              </TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>

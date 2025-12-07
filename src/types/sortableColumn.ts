@@ -1,4 +1,6 @@
-export type SortableColumn = "id" | "views" | "likes" | "comments";
+export type SortableColumnPosts = "id" | "views" | "likes" | "comments";
+export type SortableColumnComments = "firstName";
+
 export type SortableColumnAdmins =
   | "id"
   | "firstName"

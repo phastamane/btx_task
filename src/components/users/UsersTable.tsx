@@ -21,9 +21,15 @@ import { USERS_COLUMNS } from "@/shared/constants/users.constants";
 import { SortableColumnUsers } from "@/types/sortableColumn";
 import { usersRenderCell } from "./usersRenderCell";
 
-
-
-export default function UsersTable({ users, usersPosts, userComments }: { users: UserInterface[], usersPosts: Map<number, { post:Post[], likes:number,}>, userComments: Map<number, { comments: CommentItem[] }>, }) {
+export default function UsersTable({
+  users,
+  usersPosts,
+  userComments,
+}: {
+  users: UserInterface[];
+  usersPosts: Map<number, { post: Post[]; likes: number }>;
+  userComments: Map<number, { comments: CommentItem[] }>;
+}) {
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "id",
     direction: "ascending",
@@ -45,35 +51,44 @@ export default function UsersTable({ users, usersPosts, userComments }: { users:
   }, [filterValue, users]);
 
   const sortedPosts = React.useMemo(() => {
-  const sorted = [...filteredPosts];
+    const sorted = [...filteredPosts];
 
-  sorted.sort((a, b) => {
-    const col = sortDescriptor.column as SortableColumnUsers;
+    sorted.sort((a, b) => {
+      const col = sortDescriptor.column as SortableColumnUsers;
 
-    if (col === "likes") {
-      return (usersPosts.get(a.id)?.likes ?? 0) - (usersPosts.get(b.id)?.likes ?? 0);
-    }
+      if (col === "likes") {
+        return (
+          (usersPosts.get(a.id)?.likes ?? 0) -
+          (usersPosts.get(b.id)?.likes ?? 0)
+        );
+      }
 
-    if (col === "posts") {
-      return (usersPosts.get(a.id)?.post.length ?? 0) - (usersPosts.get(b.id)?.post.length ?? 0);
-    }
+      if (col === "posts") {
+        return (
+          (usersPosts.get(a.id)?.post.length ?? 0) -
+          (usersPosts.get(b.id)?.post.length ?? 0)
+        );
+      }
 
-    if (col === "comments") {
-      return (userComments.get(a.id)?.comments.length ?? 0) - (userComments.get(b.id)?.comments.length ?? 0);
-    }
+      if (col === "comments") {
+        return (
+          (userComments.get(a.id)?.comments.length ?? 0) -
+          (userComments.get(b.id)?.comments.length ?? 0)
+        );
+      }
 
-    const x = a[col];
-    const y = b[col];
+      const x = a[col];
+      const y = b[col];
 
-    if (x < y) return -1;
-    if (x > y) return 1;
-    return 0;
-  });
+      if (x < y) return -1;
+      if (x > y) return 1;
+      return 0;
+    });
 
-  if (sortDescriptor.direction === "descending") sorted.reverse();
+    if (sortDescriptor.direction === "descending") sorted.reverse();
 
-  return sorted;
-}, [filteredPosts, sortDescriptor, usersPosts, userComments]);
+    return sorted;
+  }, [filteredPosts, sortDescriptor, usersPosts, userComments]);
 
   const pageCount = Math.ceil(filteredPosts.length / rowsPerPage);
 
@@ -87,9 +102,13 @@ export default function UsersTable({ users, usersPosts, userComments }: { users:
       aria-label="Table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
-      classNames={{ table: " text-gray-800",
-        base: "max-h-full"
-       }}
+      classNames={{
+        table: "text-gray-800",
+        base: "max-h-full",
+        th: "text-gray-500 bg-white font-sm",
+        tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
+        wrapper: "px-0 pt-0",
+      }}
       topContent={
         <InputSearch
           filterValue={filterValue}
@@ -114,8 +133,10 @@ export default function UsersTable({ users, usersPosts, userComments }: { users:
     >
       <TableHeader columns={USERS_COLUMNS}>
         {(column) => (
-          <TableColumn key={column.key} allowsSorting={column.sorting}
-          align={
+          <TableColumn
+            key={column.key}
+            allowsSorting={column.sorting}
+            align={
               ["posts", "likes", "comments", "role"].includes(column.key)
                 ? "center"
                 : "start"
@@ -129,12 +150,12 @@ export default function UsersTable({ users, usersPosts, userComments }: { users:
       <TableBody items={items} emptyContent="Ничего не найдено">
         {(item: UserInterface) => (
           <TableRow key={item.id}>
-      {(columnKey) => (
-        <TableCell>
-          {usersRenderCell(item, columnKey, usersPosts, userComments)}
-        </TableCell>
-      )}
-    </TableRow>
+            {(columnKey) => (
+              <TableCell>
+                {usersRenderCell(item, columnKey, usersPosts, userComments)}
+              </TableCell>
+            )}
+          </TableRow>
         )}
       </TableBody>
     </Table>

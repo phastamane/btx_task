@@ -1,18 +1,50 @@
-export const UsersIcon = () => {
-  return (
-    <img src="/users.svg" alt=""/>
-  );
+type IconProps = {
+  className?: string;
+  color?: string;
+  size?: number;    
 };
-export const AdminsIcon = () => {
-  return (
-    <img src="/admins.svg" alt=""/>
-  );
-};
-export const PostsIcon = () => {
-  return (
-    <img className = 'brightness-0' src="/posts.svg" alt=""/>
-  );
-};
+
+const base = "mask-center mask-no-repeat";
+
+export const UsersIcon = ({ className = "", color = "#000", size = 20 }: IconProps) => (
+  <div
+    className={`${base} ${className}`}
+    style={{
+      width: size,
+      height: size,
+      backgroundColor: color,
+      WebkitMaskImage: "url('/users.svg')",
+      maskImage: "url('/users.svg')",
+    }}
+  />
+);
+
+export const AdminsIcon = ({ className = "", color = "#000", size = 20 }: IconProps) => (
+  <div
+    className={`${base} ${className}`}
+    style={{
+      width: size,
+      height: size,
+      backgroundColor: color,
+      WebkitMaskImage: "url('/admins.svg')",
+      maskImage: "url('/admins.svg')",
+    }}
+  />
+);
+
+export const PostsIcon = ({ className = "", color = "#000", size = 20 }: IconProps) => (
+  <div
+    className={`${base} ${className}`}
+    style={{
+      width: size,
+      height: size,
+      backgroundColor: color,
+      WebkitMaskImage: "url('/posts.svg')",
+      maskImage: "url('/posts.svg')",
+    }}
+  />
+);
+
 export const ExitIcon = () => {
   return (
     <img src="/exit.svg" alt=""/>

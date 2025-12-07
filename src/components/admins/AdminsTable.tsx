@@ -72,7 +72,13 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
       aria-label="Table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
-      classNames={{ table: "min-h-auto text-gray-800" }}
+      classNames={{
+        table: "text-gray-800",
+        base: "max-h-full",
+        th: "text-gray-500 bg-white font-sm",
+        tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
+        wrapper: 'px-0 pt-0'
+      }}
       topContent={
         <InputSearch
           filterValue={filterValue}
@@ -110,29 +116,35 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
               switch (columnKey) {
                 case "fullName":
                   return (
-                     <TableCell>
-                         <div className="flex gap-2 items-center min-h-6">
-                          {item?.image ? (
-                            <img
-                              className="max-w-6"
-                              src={item.image}
-                              alt="User avatar"
-                            />
-                          ) : (
-                            <img
-                              className="max-w-6"
-                              src="/no-avatar-user.svg"
-                              alt="Cant such user avatar"
-                            />
-                          )}
-                          
-                            <p className="font-semibold">{`${item.firstName} ${item.lastName}`}</p>
-                            
-                        </div>
-                     </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2 items-center min-h-6">
+                        {item?.image ? (
+                          <img
+                            className="max-w-6"
+                            src={item.image}
+                            alt="User avatar"
+                          />
+                        ) : (
+                          <img
+                            className="max-w-6"
+                            src="/no-avatar-user.svg"
+                            alt="Cant such user avatar"
+                          />
+                        )}
+
+                        <p className="font-semibold">{`${item.firstName} ${item.lastName}`}</p>
+                      </div>
+                    </TableCell>
                   );
                 case "birthInfo":
-                  return <TableCell><div className="flex gap-1"><p>{formatDateRu(item.birthDate)}</p><p className="text-gray-600">({pluralAge(item.age)})</p></div></TableCell>;
+                  return (
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <p>{formatDateRu(item.birthDate)}</p>
+                        <p className="text-gray-600">({pluralAge(item.age)})</p>
+                      </div>
+                    </TableCell>
+                  );
                 case "actions":
                   return (
                     <TableCell>
@@ -140,11 +152,11 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
                     </TableCell>
                   );
                 case "gender":
-                    return(
-                        <TableCell>
-                      {item.gender === 'male' ? 'Мужской' : "Женский"}
+                  return (
+                    <TableCell>
+                      {item.gender === "male" ? "Мужской" : "Женский"}
                     </TableCell>
-                    )
+                  );
 
                 default:
                   return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;

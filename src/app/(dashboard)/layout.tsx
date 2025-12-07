@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@heroui/react";
-import { useRouter } from "next/navigation"; // ← ПРАВИЛЬНО
+import { useRouter } from "next/navigation";
 import {
   UsersIcon,
   AdminsIcon,
@@ -9,6 +9,7 @@ import {
   ExitIcon,
 } from "@/components/icons/Icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 
 const queryClient = new QueryClient();
 
@@ -17,13 +18,14 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter(); // ← работает
+  const router = useRouter();
 
   const buttons = [
     { icon: PostsIcon, desc: "Публикации", link: "/posts" },
     { icon: AdminsIcon, desc: "Администраторы", link: "/admins" },
     { icon: UsersIcon, desc: "Пользователи", link: "/users" },
   ];
+  const [pressedBut, setPressedBut] = useState<number>();
 
   return (
     <div className=" flex bg-blue-100">
@@ -34,16 +36,27 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex flex-col gap-4 items-start">
-            {buttons.map((button) => {
+            {buttons.map((button, i) => {
               const Icon = button.icon;
               return (
                 <div className="flex" key={button.desc}>
                   <Button
-                    onClick={() => router.push(button.link)}
+                    onPress={() => {
+                      router.push(button.link);
+                      setPressedBut(i);
+                    }}
+                    key={button.link}
                     color="primary"
                     variant="light"
-                    className="justify-start w-55 text-black"
-                    startContent={<Icon />}
+                    className={`justify-start w-55 text-black
+                    ${i === pressedBut && "bg-blue-200 text-blue-600"}`}
+                    startContent={
+                      <Icon
+                        color={i === pressedBut ? "#006fee" : "#000"}
+                        size={20}
+                        className=""
+                      />
+                    }
                   >
                     {button.desc}
                   </Button>
