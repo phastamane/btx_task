@@ -85,7 +85,7 @@ export default function CommentsTable({
         base: "max-h-full",
         th: "text-gray-500 bg-white font-sm",
         tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
-        wrapper: "pt-0 px-0",
+        wrapper: "pt-0",
       }}
       topContent={
         <InputSearch
@@ -120,15 +120,16 @@ export default function CommentsTable({
               switch (columnKey) {
 
                 case "author":
+                  const userItem = users.get(item.user.id)
                   return (
                      <TableCell>
                     <div className="flex gap-2 items-center min-h-6">
                       <img
                         className="w-6 h-6 rounded-full object-cover"
-                        src={users.get(item.user.id)!.image ?? "/no-avatar-user.svg"}
+                        src={userItem?.image ?? "/no-avatar-user.svg"}
                         alt="User avatar"
                       />
-                      <p className="font-semibold">{users.get(item.user.id)?.firstName}</p>
+                      <p>{`${userItem?.firstName} ${userItem?.lastName[0]}.`}</p>
                     </div>
                     </TableCell>
                   );

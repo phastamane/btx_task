@@ -77,7 +77,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
         base: "max-h-full",
         th: "text-gray-500 bg-white font-sm",
         tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
-        wrapper: 'px-0 pt-0'
+        wrapper: 'pt-0'
       }}
       topContent={
         <InputSearch

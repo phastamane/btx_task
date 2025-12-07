@@ -37,7 +37,6 @@ const usersPostsMap = useMemo(() => {
     isLoading,
     isError,
     posts: data,
-    
     error,
   };
 }

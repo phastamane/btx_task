@@ -10,6 +10,7 @@ import {
 } from "@/components/icons/Icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import User from "@/components/ui/User";
 
 const queryClient = new QueryClient();
 
@@ -67,13 +68,7 @@ export default function DashboardLayout({
         </div>
 
         <div className="flex flex-col bg-blue-50 p-3 rounded-xl">
-          <div className="flex items-start">
-            <img src="admins.svg" alt="" />
-            <div className="grid items-start">
-              <p>name</p>
-              <p className="text-[#006fee] font-bold">username</p>
-            </div>
-          </div>
+          <div className="justify-self-start"><User/></div>
           <Button
             className="bg-blue-200 text-[#006fee]"
             startContent={<ExitIcon />}

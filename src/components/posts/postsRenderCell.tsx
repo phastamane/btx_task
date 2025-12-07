@@ -11,7 +11,7 @@ export function postsRenderCell(
   users: UserTableType,
   comments: CommentTableType,
 ) {
-  const router = useRouter()
+ 
   switch (columnKey) {
     case "title":
       return <p className="font-semibold">{post.title}</p>;
@@ -39,18 +39,6 @@ export function postsRenderCell(
 
     case "comments":
       return comments.get(post.id)?.comments.length ?? 0;
-
-    case "button":
-      return (
-        <div>
-          <img
-            src="/arrow-button.svg"
-            className="cursor-pointer"
-            alt="open"
-            onClick={() => router.push(`/posts/${post.id}/comments`)}
-          />
-        </div>
-      );
 
     default: {
       const value = post[columnKey as keyof Post];

@@ -1,13 +1,16 @@
 "use client";
+import { use } from "react";
 import { Spinner } from "@heroui/react";
 import CommentsTable from "@/components/posts/CommetnsTable";
 import { COMMENTS_CONST } from "@/shared/constants/comments.constants";
 import { I18nProvider } from "@react-aria/i18n";
-import Modal from "@/components/ui/Modal";
+import { useRouter } from "next/navigation";
 import { useComments } from "@/hooks/useComments";
 import { useUsers } from "@/hooks/useUsers";
+import { usePosts } from "@/hooks/usePosts";
 
-function CommentsPage({ params }: { params: { postId: string } }) {
+function CommentsPage(props: { params: Promise<{ postId: string }> }) {
+  const params = use(props.params);
   const {
     commentsMap,
     isLoading: commentsLoading,
@@ -21,7 +24,11 @@ function CommentsPage({ params }: { params: { postId: string } }) {
     error: usersErrorData,
   } = useUsers();
 
-  const postId  = Number(params.postId);
+  const { posts } = usePosts();
+
+  const router = useRouter();
+
+  const postId = Number(params.postId);
 
   if (commentsLoading) {
     return (
@@ -44,19 +51,26 @@ function CommentsPage({ params }: { params: { postId: string } }) {
       <I18nProvider locale="ru-RU">
         <div className="px-20 pt-20">
           <div className="grid gap-3 mb-10">
-            <div className="flex justify-between">
-              <p>{COMMENTS_CONST.backTitle}</p>
+            <div className="flex flex-col gap-8">
+              <button
+                onClick={() => router.back()}
+                className="hover:underline w-fit cursor-pointer"
+              >
+                {COMMENTS_CONST.backTitle}
+              </button>
+
               <h1 className="text-3xl font-semibold">{COMMENTS_CONST.title}</h1>
-              <Modal page="admins" />
             </div>
-            {/* <p className="text-gray-700 text-lg">{posts?.posts.title}</p> */}
+            <p className="text-gray-700 text-lg">
+              {posts?.posts[postId].title}
+            </p>
           </div>
           {commentsMap && userMap && (
-             <CommentsTable
-            commentsMap={commentsMap}
-            users={userMap}
-            postId={postId}
-          />
+            <CommentsTable
+              commentsMap={commentsMap}
+              users={userMap}
+              postId={postId}
+            />
           )}
         </div>
       </I18nProvider>

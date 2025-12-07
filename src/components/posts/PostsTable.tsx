@@ -22,7 +22,7 @@ import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { POST_COLUMNS } from "@/shared/constants/posts.constants";
 import { postsRenderCell } from "./postsRenderCell";
-
+import { useRouter } from "next/navigation";
 export default function PostsTable({
   posts,
   users,
@@ -98,6 +98,8 @@ export default function PostsTable({
     return sortedPosts.slice(start, start + rowsPerPage);
   }, [sortedPosts, page]);
 
+   const router = useRouter()
+
   return (
     <Table
       aria-label="Table"
@@ -151,13 +153,33 @@ export default function PostsTable({
       <TableBody items={items} emptyContent="Ничего не найдено">
         {(item: Post) => (
           <TableRow key={item.id}>
-            {(columnKey) => (
-
-              
-              <TableCell>
-                {postsRenderCell(item, columnKey, users, comments)}
-              </TableCell>
-            )}
+            {(columnKey) => {
+              switch (columnKey) {
+                case "button":
+                  return (
+                    <TableCell>
+                      {
+                        <div>
+                          <img
+                            src="/arrow-button.svg"
+                            className="cursor-pointer"
+                            alt="open"
+                            onClick={() =>
+                              router.push(`/posts/${item.id}/comments`)
+                            }
+                          />
+                        </div>
+                      }
+                    </TableCell>
+                  );
+                default:
+                  return (
+                    <TableCell>
+                      {postsRenderCell(item, columnKey, users, comments)}
+                    </TableCell>
+                  );
+              }
+            }}
           </TableRow>
         )}
       </TableBody>
