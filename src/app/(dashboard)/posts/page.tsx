@@ -34,7 +34,7 @@ function UserPage() {
     );
   }
   return (
-    <div className="px-20 pt-20">
+    <div>
       <div className="grid gap-3 mb-10">
         <h1 className="text-3xl font-semibold">{POSTS_CONST.title}</h1>
         <p className="text-gray-700 text-lg">{POSTS_CONST.subTitle}</p>

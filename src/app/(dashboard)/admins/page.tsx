@@ -38,7 +38,7 @@ function AdminPage() {
   return (
     <>
         <I18nProvider locale='ru-RU'>
-          <div className='px-20 pt-20'>
+          <div>
             <div className="grid gap-3 mb-10">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-semibold">{ADMINS_CONST.title}</h1>

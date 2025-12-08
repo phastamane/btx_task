@@ -7,7 +7,7 @@ export default function User() {
         src: "https://avatars.githubusercontent.com/u/30373425?v=4",
       }}
       description={
-        <Link isExternal href="https://x.com/jrgarciadev" size="sm">
+        <Link isExternal href="localhost" size="sm">
           @jrgarciadev
         </Link>
       }

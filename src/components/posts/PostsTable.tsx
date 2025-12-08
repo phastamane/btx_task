@@ -110,7 +110,7 @@ export default function PostsTable({
         base: "max-h-full",
         th: "text-gray-500 bg-white font-sm",
         tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
-        wrapper: "pt-0 px-0",
+        wrapper: "pt-0",
       }}
       topContent={
         <InputSearch

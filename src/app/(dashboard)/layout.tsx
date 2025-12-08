@@ -78,7 +78,7 @@ export default function DashboardLayout({
         </div>
       </div>
 
-      <div className="w-full bg-blue-100 pb-5 min-h-[100dvh]">
+      <div className="w-full bg-blue-100 pb-5 min-h-[100dvh] pt-20 px-20">
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

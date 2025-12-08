@@ -4,6 +4,4 @@ export interface SelectProps {
 
   pageCount: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-
-
 }

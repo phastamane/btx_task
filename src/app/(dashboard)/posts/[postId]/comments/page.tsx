@@ -49,7 +49,7 @@ function CommentsPage(props: { params: Promise<{ postId: string }> }) {
   return (
     <>
       <I18nProvider locale="ru-RU">
-        <div className="px-20 pt-20">
+        <div>
           <div className="grid gap-3 mb-10">
             <div className="flex flex-col gap-8">
               <button
