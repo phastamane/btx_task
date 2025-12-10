@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import "@/styles/account.scss";
 import { formatDateRu, pluralAge } from "@/utils/formatDate";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import InputField from "@/components/ui/InputField";
 
 function AccountPage() {
-  const [dateInput, setDateInput] = useState<string>();
-
   const { userMap } = useUsers();
 
   const user = userMap.get(1);
@@ -17,6 +19,30 @@ function AccountPage() {
   const birthDate = formatDateRu(user?.birthDate);
   const age = pluralAge(user?.age);
   const image = user?.image;
+
+  // ---- Schema ----
+  const schema = z.object({
+    username: z
+      .string()
+      .min(3, "ФИО должно быть больше 3 символов")
+      .max(100, "ФИО не может быть больше 100 символов"),
+
+    email: z.email("Неверный email"),
+
+    birthday: z.date(),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data: any) => {
+    console.log("Форма:", data);
+  };
 
   return (
     <div className="account-page">
@@ -54,45 +80,41 @@ function AccountPage() {
         <div className="account-page__change-password">изменить пароль</div>
       </div>
 
-      {/* Форма аккаунта */}
+      {/* Форма */}
       <div className="account-page__section">
         <h2 className="account-page__section-title">Личные данные</h2>
 
-        <form className="account-page__form">
-          <div className="account-page__field">
-            <label className="account-page__label">ФИО</label>
-            <input
-              className="account-page__input"
-              type="text"
-              placeholder="Алексеев Давид Иванович"
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="account-page__form">
+          <InputField
+            label="ФИО"
+            name="username"
+            register={register}
+            error={errors.username}
+            defaultValue={userName}
+            inputProps={{ placeholder: "Введите ФИО" }}
+          />
 
-          <div className="account-page__field">
-            <label className="account-page__label">Дата рождения</label>
-            <input
-              className="account-page__input"
-              type="date"
-              id="start"
-              name="trip-start"
-              onChange={(e) => setDateInput(e.target.value)}
-              value={dateInput || ""}
-              required
-              min="1900-01-01"
-              max="2200-12-31"
-            />
-          </div>
+          <InputField
+            label="Дата рождения"
+            name="birthday"
+            type="date"
+            register={register}
+            error={errors.birthday}
+            inputProps={{
+              min: "1900-01-01",
+              max: "2200-12-31",
+            }}
+          />
 
-          <div className="account-page__field">
-            <label className="account-page__label">Email</label>
-            <input
-              className="account-page__input"
-              type="email"
-              placeholder="jrgarciadev@example.com"
-              required
-            />
-          </div>
+          <InputField
+            label="Email"
+            name="email"
+            type="email"
+            register={register}
+            error={errors.email}
+            defaultValue={email}
+            inputProps={{ placeholder: "Введите Email" }}
+          />
 
           <div className="account-page__field">
             <label className="account-page__label">Роль</label>
