@@ -19,6 +19,7 @@ export function useUsers() {
       if (el.role === "admin") adminsArr.push(el);
       else usersArr.push(el)
     });
+    
 
     return {
       admins: adminsArr,
@@ -26,6 +27,8 @@ export function useUsers() {
       userMap: map,
     };
   }, [data]);
+console.log(userMap)
+  
 
   return {
     isLoading,

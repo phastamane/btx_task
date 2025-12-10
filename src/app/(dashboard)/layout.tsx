@@ -11,6 +11,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import User from "@/components/ui/User";
+import { useLogout } from "@/hooks/useLogout";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ export default function DashboardLayout({
     { icon: UsersIcon, desc: "Пользователи", link: "/users" },
   ];
   const [pressedBut, setPressedBut] = useState<number>(0);
+  const logout = useLogout()
 
   return (
     <div className=" flex bg-blue-100">
@@ -72,6 +74,7 @@ export default function DashboardLayout({
           <Button
             className="bg-blue-200 text-[#006fee]"
             startContent={<ExitIcon />}
+            onPress={logout}
           >
             Выход
           </Button>

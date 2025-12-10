@@ -5,6 +5,7 @@ import { Form, Input, Button } from "@heroui/react";
 import axios from "axios";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons/Icons";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user.store";
 
 const TEXTS = {
   USERNAME_LABEL: "Имя пользователя",
@@ -17,9 +18,13 @@ const TEXTS = {
 export default function AuthForm() {
   const [error, setError] = React.useState<string | null>(null);
   const [isVisible, setIsVisible] = React.useState(false);
-
+  const setUser = useUserStore((s) => s.setUser);
+  const user = useUserStore((s) => s.user)
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const router = useRouter()
+  const router = useRouter();
+  React.useEffect(() => {
+  console.log("USER UPDATED", user);
+}, [user]);
 
   return (
     <Form
@@ -32,11 +37,12 @@ export default function AuthForm() {
 
         try {
           const res = await axios.post("/api/auth/login", data);
-          console.log("SUCCESS:", res.data);
-            router.push('/posts')
-          
+          setUser(res.data.user);
+          router.push("/posts");
+          console.log("SERVER RESPONSE:", res.data);
+
+
         } catch (err) {
-          console.log("ERROR:", err);
           setError("Неверные данные или сервер недоступен");
         }
       }}
@@ -69,7 +75,7 @@ export default function AuthForm() {
             )}
           </button>
         }
-        name='password'
+        name="password"
         label={TEXTS.PASSWORD_LABEL}
         labelPlacement="outside"
         placeholder={TEXTS.PASSWORD_PLACEHOLDER}
@@ -89,7 +95,7 @@ export default function AuthForm() {
 
       {error && (
         <div className="text-small text-default-500">
-          Action: <code>{error}</code>
+         <p>{error}</p>
         </div>
       )}
     </Form>

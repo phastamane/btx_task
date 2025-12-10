@@ -1,17 +1,24 @@
-import {User as HeroUIUser, Link} from "@heroui/react";
+"use client";
+
+import { User as HeroUIUser } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user.store";
 
 export default function User() {
+  const router = useRouter();
+  const user = useUserStore((s) => s.user);
+
   return (
     <HeroUIUser
       avatarProps={{
-        src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+        src: user?.image,
       }}
       description={
-        <Link isExternal href="localhost" size="sm">
-          @jrgarciadev
-        </Link>
+        <a className='text-blue-500 cursor-pointer text-base' onClick={() => router.push("/account")}>
+          @{user?.username}
+        </a>
       }
-      name="Junior Garcia"
+      name={user?.firstName + " " + user?.lastName}
     />
   );
 }

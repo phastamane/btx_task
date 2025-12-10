@@ -1,3 +1,5 @@
+import { UserRole } from "@/shared/constants/roles.constants";
+
 export interface UserInterface {
   id: number;
   firstName: string;
@@ -8,7 +10,7 @@ export interface UserInterface {
   gender: string;
   email: string;
   image: string;
-  role: string;
+  role: UserRole;
 }
 
 export type UserTableType = Map<number,  UserInterface>
