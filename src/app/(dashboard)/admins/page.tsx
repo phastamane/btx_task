@@ -1,15 +1,13 @@
 "use client";
 import { useUsers } from "@/hooks/useUsers";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Spinner } from "@heroui/react";
 import AdminsTable from "@/components/admins/AdminsTable";
 import { ADMINS_CONST } from "@/shared/constants/admins.constants";
-import Button from "@/components/ui/Button";
-import Form from "@/components/ui/FormAddPerson";
-import FormAddPerson from "@/components/ui/FormAddPerson";
+
 import { I18nProvider } from "@react-aria/i18n";
-import { div } from "framer-motion/client";
 import Modal from "@/components/ui/Modal";
+import { useAdminStore } from "@/store/admin.store";
 
 function AdminPage() {
   const {
@@ -18,6 +16,13 @@ function AdminPage() {
     isError: usersError,
     error: usersErrorData,
   } = useUsers();
+  const { setAdmins, admins: adminList } = useAdminStore();
+
+  useEffect(() => {
+    if (admins) {
+      setAdmins(admins);
+    }
+  }, [admins, setAdmins]);
 
   if (usersLoading) {
     return (
@@ -47,7 +52,7 @@ function AdminPage() {
               <p className="text-gray-700 text-lg">{ADMINS_CONST.subTitle}</p>
             </div>
       
-            {admins && <AdminsTable admins={admins} /> }
+            {adminList && <AdminsTable admins={adminList} /> }
           </div>
         </I18nProvider>
       

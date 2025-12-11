@@ -1,91 +1,19 @@
-"use client";
+// app/(dashboard)/layout.tsx
 
-import { Button } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import {
-  UsersIcon,
-  AdminsIcon,
-  PostsIcon,
-  ExitIcon,
-} from "@/components/icons/Icons";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
-import User from "@/components/ui/User";
-import { useLogout } from "@/hooks/useLogout";
+import { ReactNode } from "react";
+import { cookies } from "next/headers";
+import DashboardClient from "./DashboardClient";
 
-const queryClient = new QueryClient();
+export default async function Layout({ children }: { children: ReactNode }) {
+  const cookieStore = await cookies();
+  const raw = cookieStore.get("user")?.value;
+  let user = null;
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const router = useRouter();
+  if (raw) {
+    try {
+      user = JSON.parse(raw);
+    } catch {}
+  }
 
-  const buttons = [
-    { icon: PostsIcon, desc: "Публикации", link: "/posts" },
-    { icon: AdminsIcon, desc: "Администраторы", link: "/admins" },
-    { icon: UsersIcon, desc: "Пользователи", link: "/users" },
-  ];
-  const [pressedBut, setPressedBut] = useState<number>(0);
-  const logout = useLogout()
-
-  return (
-    <div className=" flex bg-blue-100">
-      <div className="flex flex-col w-1/6 p-6 pb-21 justify-between bg-white">
-        <div className="flex flex-col items-center">
-          <div className="pb-10">
-            <img src="/BTX.svg" alt="logo" />
-          </div>
-
-          <div className="flex flex-col gap-4 items-start">
-            {buttons.map((button, i) => {
-              const Icon = button.icon;
-              return (
-                <div className="flex" key={button.desc}>
-                  <Button
-                    onPress={() => {
-                      router.push(button.link);
-                      setPressedBut(i);
-                    }}
-                    key={button.link}
-                    color="primary"
-                    variant="light"
-                    className={`justify-start w-55 text-black
-                    ${i === pressedBut && "bg-blue-200 text-blue-600"}`}
-                    startContent={
-                      <Icon
-                        color={i === pressedBut ? "#006fee" : "#000"}
-                        size={20}
-                        className=""
-                      />
-                    }
-                  >
-                    {button.desc}
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="flex flex-col bg-blue-50 p-3 rounded-xl">
-          <div className="justify-self-start"><User/></div>
-          <Button
-            className="bg-blue-200 text-[#006fee]"
-            startContent={<ExitIcon />}
-            onPress={logout}
-          >
-            Выход
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col w-full bg-blue-100 pb-5 min-h-[100dvh] pt-20 px-20">
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </div>
-    </div>
-  );
+  return <DashboardClient user={user}>{children}</DashboardClient>;
 }

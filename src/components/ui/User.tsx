@@ -3,10 +3,14 @@
 import { User as HeroUIUser } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user.store";
+import UserSkeleton from "./UserSkeleton";
 
 export default function User() {
   const router = useRouter();
   const user = useUserStore((s) => s.user);
+
+  if(!user)
+    return <UserSkeleton/>
 
   return (
     <HeroUIUser

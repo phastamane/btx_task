@@ -147,3 +147,64 @@
     }
   }
 }
+/* === Custom Select === */
+.account-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  &__control {
+    width: 100%;
+    padding: 12px 14px;
+    padding-right: 40px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #111827;
+    appearance: none; // убираем дефолтный браузерный select
+    cursor: pointer;
+    transition: 0.25s;
+
+    &:hover {
+      border-color: #9ca3af;
+    }
+
+    &:focus {
+      border-color: #7ca9ff;
+
+      outline: none;
+    }
+  }
+
+.account-select__wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'>\
+<path d='M6 9l6 6 6-6'/>\
+</svg>");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  transform: translateY(-50%);
+  opacity: 0.8;
+}
+
+}

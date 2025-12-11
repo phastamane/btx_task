@@ -4,88 +4,79 @@ import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { useState } from "react";
 import { validateUser } from "@/utils/validateUser";
 import type { UserFormInput } from "@/schemas/user.schema";
-import { createUser } from "@/services/users.servise";
-import { useLocalUsersStore } from "@/store/localUsers.store";
-import { role } from "@/shared/constants/role.constants";
 
-export default function FormAddPerson({
-  onPress,
-  context,
+export default function EditUserForm({
+  initialUser,
+  onSubmit,
 }: {
-  onPress: () => void;
-  context: string;
+  initialUser: any;
+  onSubmit: (data: any) => void;
 }) {
-  const addLocalUser = useLocalUsersStore((s) => s.addLocalUser);
-
   const [form, setForm] = useState<UserFormInput>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    age: "0",
-    gender: "",
-    role: "",
+    firstName: initialUser.firstName,
+    lastName: initialUser.lastName,
+    email: initialUser.email,
+    age: String(initialUser.age),
+    gender: initialUser.gender,
+    role: initialUser.role,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const roleOptions = role(context)
+  const roleOptions = [
+    { key: "admin", label: "Администратор" },
+    { key: "moderator", label: "Модератор" },
+    { key: "user", label: "Автор" },
+  ];
 
   const genderOptions = [
     { key: "male", label: "Мужской" },
     { key: "female", label: "Женский" },
   ];
 
- const handleSubmit = async () => {
-  const { data, errors } = validateUser(form);
+  const handleSave = () => {
+    const { data, errors } = validateUser(form);
 
-  if (errors) {
-    setErrors(errors);
-    return;
-  }
+    if (errors) {
+      setErrors(errors);
+      return;
+    }
 
-  setErrors({});
-
-  // data.age уже number, transform сработал
-  const newUser = await createUser(data);
-
-  addLocalUser(newUser);
-  onPress();
-};
-
+    onSubmit(data); // data.age уже number
+  };
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-sm">
-
       <Input
         label="Имя"
+        value={form.firstName}
         isInvalid={!!errors.firstName}
         errorMessage={errors.firstName}
-        value={form.firstName}
         onChange={(e) => setForm({ ...form, firstName: e.target.value })}
       />
 
       <Input
         label="Фамилия"
+        value={form.lastName}
         isInvalid={!!errors.lastName}
         errorMessage={errors.lastName}
-        value={form.lastName}
         onChange={(e) => setForm({ ...form, lastName: e.target.value })}
       />
 
       <Input
         label="Email"
+        value={form.email}
         isInvalid={!!errors.email}
         errorMessage={errors.email}
-        value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
       />
 
       <Input
         label="Возраст"
         type="number"
+        value={form.age}
         isInvalid={!!errors.age}
         errorMessage={errors.age}
-        value={form.age}
         onChange={(e) => setForm({ ...form, age: e.target.value })}
       />
 
@@ -117,8 +108,8 @@ export default function FormAddPerson({
         ))}
       </Select>
 
-      <Button color="primary" onPress={handleSubmit}>
-        Добавить пользователя
+      <Button color="primary" onPress={handleSave}>
+        Сохранить изменения
       </Button>
     </div>
   );

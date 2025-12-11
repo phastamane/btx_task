@@ -23,10 +23,12 @@ import { usersRenderCell } from "./usersRenderCell";
 
 export default function UsersTable({
   users,
+  admins,
   usersPosts,
   userComments,
 }: {
   users: UserInterface[];
+  admins: UserInterface[]
   usersPosts: Map<number, { post: Post[]; likes: number }>;
   userComments: Map<number, { comments: CommentItem[] }>;
 }) {
@@ -35,20 +37,22 @@ export default function UsersTable({
     direction: "ascending",
   });
 
+  const usersArr = [...admins, ...users];
+
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 12;
 
   const [filterValue, setFilterValue] = React.useState("");
 
   const filteredPosts = React.useMemo(() => {
-    if (!filterValue.trim()) return users;
+    if (!filterValue.trim()) return usersArr;
 
-    return users.filter((user) => {
+    return usersArr.filter((user) => {
       const expression =
         `${user.firstName} ${user.lastName} ${user.email}`.toLowerCase();
       return expression.includes(filterValue.toLowerCase());
     });
-  }, [filterValue, users]);
+  }, [filterValue, usersArr]);
 
   const sortedPosts = React.useMemo(() => {
     const sorted = [...filteredPosts];

@@ -7,7 +7,7 @@ export default function AccessDeniedPage() {
     <section className="min-h-full flex items-center justify-center bg-blue-100 px-6">
       <div className="max-w-md text-center">
         {/* Иконка */}
-        <div className="mx-auto mb-6 w-24 h-24 rounded-full bg-neutral-900 flex items-center justify-center border border-neutral-800 shadow-[0_0_30px_rgba(255,127,80,0.15)]">
+        <div className="mx-auto mb-6 w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(255,127,80,0.15)]">
           <span className="text-4xl">🔒</span>
         </div>
 
@@ -27,7 +27,7 @@ export default function AccessDeniedPage() {
         <div className="flex flex-col gap-4">
           <Link
             href="/"
-            className="px-5 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-medium transition"
+            className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-400 text-white font-medium transition"
           >
             На главную
           </Link>

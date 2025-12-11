@@ -9,7 +9,7 @@ import { Chip } from "@heroui/react";
 export function usersRenderCell(
   user: UserInterface,
   columnKey: Key,
-  usersPosts: Map<number, { post: Post[], likes: number }>,
+  usersPosts: Map<number, { post: Post[]; likes: number }>,
   userComments: Map<number, { comments: CommentItem[] }>
 ) {
   switch (columnKey) {
@@ -17,10 +17,11 @@ export function usersRenderCell(
       return (
         <div className="flex gap-2 items-center min-h-6">
           <img
-            className="w-6 h-6 rounded-full object-cover"
-            src={user.image ?? "/no-avatar-user.svg"}
-            alt="User avatar"
+            src={user.image ? user.image : "/no-avatar-user.svg"}
+            alt="avatar"
+            className="w-6 h-6 rounded-full"
           />
+
           <p className="font-semibold">{`${user.firstName} ${user.maidenName} ${user.lastName}`}</p>
         </div>
       );
@@ -44,21 +45,20 @@ export function usersRenderCell(
 
     case "comments":
       return userComments.get(user.id)?.comments.length ?? 0;
-    
-    case "role":{
-        switch (user.role){
-            case "admin":
-                return <Chip color="warning">Администратор</Chip>
-            case "moderator":
-                return <Chip color="success">Модератор</Chip>
-            default:
-                return <Chip>Автор</Chip>        
-        }}
-            
-        
+
+    case "role": {
+      switch (user.role) {
+        case "admin":
+          return <Chip color="warning">Администратор</Chip>;
+        case "moderator":
+          return <Chip color="success">Модератор</Chip>;
+        default:
+          return <Chip>Автор</Chip>;
+      }
+    }
 
     case "actions":
-      return <DropDown />;
+      return <DropDown/>;
 
     default:
       return user[columnKey as keyof UserInterface];

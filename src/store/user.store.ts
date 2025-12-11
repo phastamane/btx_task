@@ -18,7 +18,6 @@ interface UserStore {
 
   setUser: (user: AuthUser | null) => void;
 
-  // Новый метод
   clearUser: () => void;
 }
 

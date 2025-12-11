@@ -5,7 +5,8 @@ export interface UserInterface {
   firstName: string;
   maidenName:string;
   lastName: string;
-  birthDate: string;
+  username: string,
+  birthDate: number;
   age: number;
   gender: string;
   email: string;

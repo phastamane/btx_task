@@ -29,7 +29,7 @@ export default function Modal({page}:{page:string}) {
                 <img src='/no-avatar-user.svg' alt="" />
               </ModalHeader>
               <ModalBody className="items-center">
-                <FormAddPerson onPress={onClose}/>
+                <FormAddPerson onPress={onClose} context={page === 'admins' ? 'admin' : 'user'}/>
               </ModalBody>
               <ModalFooter>
               </ModalFooter>
