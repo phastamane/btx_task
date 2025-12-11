@@ -28,7 +28,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
   });
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 12;
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
 
   const [filterValue, setFilterValue] = React.useState("");
 
@@ -90,9 +90,8 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
       bottomContent={
         <div className="flex w-full justify-between ">
           <SelectPage
-            pagesLength={filteredPosts.length}
             rowsPerPage={rowsPerPage}
-            pageCount={pageCount}
+            setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
 
@@ -148,7 +147,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
                 case "actions":
                   return (
                     <TableCell>
-                      <DropDown></DropDown>
+                      <DropDown user={item} />
                     </TableCell>
                   );
                 case "gender":

@@ -24,7 +24,7 @@ export default function EditUserModal({
    const updateLocal = useLocalUsersStore((s) => s.updateLocalUser);
 
   const handleSubmit = async (formData: any) => {
-    const updated = await updateUser(user.id, formData);
+    const updated = await updateUser(user?.id, formData);
 
     updateLocal(updated);
     onOpenChange(false);
@@ -39,7 +39,7 @@ export default function EditUserModal({
               <p className="text-3xl">Редактирование пользователя</p>
 
               <img
-                src={user.image || "/no-avatar-user.svg"}
+                src={user?.image || "/no-avatar-user.svg"}
                 alt="avatar"
                 className="w-20 h-20 rounded-full object-cover"
               />

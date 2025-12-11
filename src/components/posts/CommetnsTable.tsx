@@ -35,7 +35,7 @@ export default function CommentsTable({
   });
   const comments = commentsMap?.get(postId)?.comments ?? [];
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 12;
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
 
   const [filterValue, setFilterValue] = React.useState("");
 
@@ -98,9 +98,8 @@ export default function CommentsTable({
       bottomContent={
         <div className="flex w-full justify-between ">
           <SelectPage
-            pagesLength={filteredComments.length}
             rowsPerPage={rowsPerPage}
-            pageCount={pageCount}
+            setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
 

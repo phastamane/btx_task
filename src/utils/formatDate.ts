@@ -1,11 +1,11 @@
-export function formatDateRu(dateString: string | undefined) {
-  if (!dateString) return 
-  const date = new Date(dateString);
+export function formatDateRu(dateInput: string | number | Date | undefined) {
+  if (!dateInput) return;
+  const date = new Date(dateInput);
   return date.toLocaleDateString("ru-RU");
 }
 
-export function pluralAge(age: number |  undefined ){
-  if (!age) return 
+export function pluralAge(age: number | undefined) {
+  if (!age && age !== 0) return;
   const lastDigit = age % 10;
   const lastTwo = age % 100;
 

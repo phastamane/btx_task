@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       birthDate: fullUser.birthDate,
       image: fullUser.image,
       role: fullUser.role ?? "user",
+      password: fullUser.password
     };
 
     const cookieStore = await cookies();

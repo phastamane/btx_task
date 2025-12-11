@@ -29,7 +29,7 @@ export function usersRenderCell(
     case "birthInfo":
       return (
         <div className="flex gap-1">
-          <p>{formatDateRu(user.birthDate)}</p>
+          <p>{formatDateRu(String(user.birthDate))}</p>
           <p className="text-gray-600">({pluralAge(user.age)})</p>
         </div>
       );
@@ -58,7 +58,7 @@ export function usersRenderCell(
     }
 
     case "actions":
-      return <DropDown/>;
+      return <DropDown user={user} />;
 
     default:
       return user[columnKey as keyof UserInterface];

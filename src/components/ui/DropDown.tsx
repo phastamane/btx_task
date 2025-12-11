@@ -15,18 +15,14 @@ import { useLocalUsersStore } from "@/store/localUsers.store";
 import EditUserModal from "./EditUserModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { UserInterface } from "@/types/users";
-import { useUserStore } from "@/store/user.store";
 
-export default function DropDown() {
+export default function DropDown({ user }: { user: UserInterface }) {
   // Управление модалками
   const editModal = useDisclosure();
   const deleteModal = useDisclosure();
 
-
-  const user = useUserStore((s) => s.user)
   const deleteLocalUser = useLocalUsersStore((s) => s.deleteLocalUser);
-  
-  if(!user) return <div><p>Пользователь не найден</p></div>
+
   const handleDelete = () => {
     deleteLocalUser(user.id);
     deleteModal.onClose();

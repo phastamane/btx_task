@@ -1,27 +1,31 @@
 "use client";
 
 import "@/styles/account.scss";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUserStore } from "@/store/user.store";
 import { role as userRole } from "@/shared/constants/role.constants";
 import { formatDateRu, pluralAge } from "@/utils/formatDate";
 import { ROLE_COLORS, ROLE_LABELS } from "@/shared/constants/roles.constants";
 import type { UserInterface } from "@/types/users";
-
+import ChangePasswordModal from "@/components/ui/ChangePasswordModal";
 
 interface AccountClientProps {
   user: UserInterface | null;
 }
 type UserRole = "admin" | "moderator" | "user";
 
-
-export default function AccountClient({ user: initialUser }: AccountClientProps) {
+export default function AccountClient({
+  user: initialUser,
+}: AccountClientProps) {
   const storedUser = useUserStore((s) => s.user);
   const setUser = useUserStore((s) => s.setUser);
 
+  const [passwordModal, setPasswordModal] = useState(false);
+
   const user = storedUser ?? initialUser;
 
-  if (!user) return <div className="text-center mt-20">Загрузка профиля...</div>;
+  if (!user)
+    return <div className="text-center mt-20">Загрузка профиля...</div>;
 
   const [form, setForm] = useState({
     fullName: `${user.firstName} ${user.maidenName} ${user.lastName}`,
@@ -33,23 +37,22 @@ export default function AccountClient({ user: initialUser }: AccountClientProps)
 
   const roleOptions = userRole(user.role);
 
-const handleSave = () => {
-  const [firstName, middleName, lastName] = form.fullName.split(" ");
+  const handleSave = () => {
+    const [firstName, middleName, lastName] = form.fullName.split(" ");
 
-  const updatedUser = {
-    ...user,
-    firstName: firstName || user.firstName,
-    maidenName: middleName || user.maidenName,
-    lastName: lastName || user.lastName,
-    email: form.email,
-    birthDate: String(form.birthDate),    // ✓ фикс
-    role: form.role as UserRole,          // ✓ фикс
-    username: user.username,
+    const updatedUser = {
+      ...user,
+      firstName: firstName || user.firstName,
+      maidenName: middleName || user.maidenName,
+      lastName: lastName || user.lastName,
+      email: form.email,
+      birthDate: String(form.birthDate), // ✓ фикс
+      role: form.role as UserRole, // ✓ фикс
+      username: user.username,
+    };
+
+    setUser(updatedUser);
   };
-
-  setUser(updatedUser);
-};
-
 
   const fullName = `${user.firstName} ${user.maidenName} ${user.lastName}`;
 
@@ -78,7 +81,12 @@ const handleSave = () => {
           </div>
         </div>
 
-        <div className="account-page__change-password">изменить пароль</div>
+        <div
+          className="account-page__change-password"
+          onClick={() => setPasswordModal(true)}
+        >
+          изменить пароль
+        </div>
       </div>
 
       {/* Личные данные */}
@@ -86,7 +94,6 @@ const handleSave = () => {
         <h2 className="account-page__section-title">Личные данные</h2>
 
         <div className="account-page__form">
-
           <div className="account-page__field">
             <label className="account-page__label">ФИО</label>
             <input
@@ -122,7 +129,7 @@ const handleSave = () => {
                 className="account-select__control"
                 value={form.role}
                 onChange={(e) =>
-                  setForm({ ...form, role: e.target.value as UserRole})
+                  setForm({ ...form, role: e.target.value as UserRole })
                 }
               >
                 {roleOptions.map((r) => (
@@ -139,9 +146,12 @@ const handleSave = () => {
               Сохранить изменения
             </button>
           </div>
-
         </div>
       </div>
+      <ChangePasswordModal
+        isOpen={passwordModal}
+        onClose={() => setPasswordModal(false)}
+      />
     </div>
   );
 }

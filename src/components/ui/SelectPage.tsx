@@ -1,21 +1,22 @@
 import { Select, SelectItem } from "@heroui/react";
 import { SelectProps } from "@/types/select";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function SelectPage({
-
-  pageCount,
+  rowsPerPage,
+  setRowsPerPage,
   setPage,
+  options,
 }: SelectProps) {
-  const arrayForSelect = Array.from({ length: pageCount }, (_, i) => ({
-    key: String(i + 1),
-    label: String(i + 1),
-    value: i + 1,
-  }));
-  const [selectedPage, setSelectedPage] = useState<string | number>(1);
-  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
-    new Set([String(selectedPage)])
+  const perPageOptions = useMemo(
+    () => options ?? Array.from({ length: 20 }, (_, i) => i + 1),
+    [options]
   );
+
+  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(
+    new Set([String(rowsPerPage)])
+  );
+
   return (
     <Select
       className="max-w-xs"
@@ -26,15 +27,18 @@ export default function SelectPage({
         value: "text-blue-600!",
         popoverContent: "text-blue-500",
       }}
-      items={arrayForSelect}
+      items={perPageOptions.map((n) => ({
+        key: String(n),
+        label: String(n),
+      }))}
       selectedKeys={selectedKeys}
       onSelectionChange={(keys) => {
-        const value = Array.from(keys)[0];
-        setSelectedKeys(new Set([value]));
-        setSelectedPage(Number(value));
-        setPage(Number(value));
+        const value = Number(Array.from(keys)[0]);
+        setSelectedKeys(new Set([String(value)]));
+        setRowsPerPage(value);
+        setPage(1);
       }}
-      label="Показывать на странице"
+      label="Строк на странице"
       labelPlacement="outside-left"
     >
       {(el) => <SelectItem key={el.key}>{el.label}</SelectItem>}

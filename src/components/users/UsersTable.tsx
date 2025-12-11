@@ -37,10 +37,14 @@ export default function UsersTable({
     direction: "ascending",
   });
 
-  const usersArr = [...admins, ...users];
+  const usersArr = [...admins, ...users]
+  .filter((user, index, arr) => 
+    index === arr.findIndex(u => u.id === user.id)
+  );
+
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 12;
+  const [rowsPerPage, setRowsPerPage] = React.useState(12);
 
   const [filterValue, setFilterValue] = React.useState("");
 
@@ -124,9 +128,8 @@ export default function UsersTable({
       bottomContent={
         <div className="flex w-full justify-between ">
           <SelectPage
-            pagesLength={filteredPosts.length}
             rowsPerPage={rowsPerPage}
-            pageCount={pageCount}
+            setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
 
