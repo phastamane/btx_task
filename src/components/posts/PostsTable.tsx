@@ -23,6 +23,7 @@ import SelectPage from "../ui/SelectPage";
 import { POST_COLUMNS } from "@/shared/constants/posts.constants";
 import { postsRenderCell } from "./postsRenderCell";
 import { useRouter } from "next/navigation";
+import { ArrowIcon } from "../icons/Icons";
 export default function PostsTable({
   posts,
   users,
@@ -96,9 +97,9 @@ export default function PostsTable({
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page]);
+  }, [sortedPosts, page, rowsPerPage]);
 
-   const router = useRouter()
+  const router = useRouter();
 
   return (
     <Table
@@ -117,6 +118,7 @@ export default function PostsTable({
           filterValue={filterValue}
           setFilterValue={setFilterValue}
           setPage={setPage}
+          placeholder="Поиск по публикациям"
         />
       }
       topContentPlacement="outside"
@@ -158,15 +160,12 @@ export default function PostsTable({
                   return (
                     <TableCell>
                       {
-                        <div>
-                          <img
-                            src="/arrow-button.svg"
-                            className="cursor-pointer"
-                            alt="open"
-                            onClick={() =>
-                              router.push(`/posts/${item.id}/comments`)
-                            }
-                          />
+                        <div
+                          onClick={() =>
+                            router.push(`/posts/${item.id}/comments`)
+                          }
+                        >
+                          <ArrowIcon />
                         </div>
                       }
                     </TableCell>

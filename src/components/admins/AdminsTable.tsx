@@ -46,10 +46,27 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
     const sorted = [...filteredPosts];
 
     sorted.sort((a, b) => {
-      const col = sortDescriptor.column as SortableColumnAdmins;
+      const col = sortDescriptor.column as string;
+      let x: any;
+      let y: any;
 
-      const x = a[col];
-      const y = b[col];
+      switch (col) {
+        case "birthInfo":
+          x = new Date(a.birthDate).getTime();
+          y = new Date(b.birthDate).getTime();
+          break;
+        case "gender":
+          x = a.gender;
+          y = b.gender;
+          break;
+        case "id":
+          x = a.id;
+          y = b.id;
+          break;
+        default:
+          x = a[col as keyof UserInterface];
+          y = b[col as keyof UserInterface];
+      }
 
       if (x < y) return -1;
       if (x > y) return 1;
@@ -65,7 +82,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page]);
+  }, [sortedPosts, page, rowsPerPage]);
 
   return (
     <Table
@@ -84,6 +101,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
           filterValue={filterValue}
           setFilterValue={setFilterValue}
           setPage={setPage}
+          placeholder="Поиск по администраторам"
         />
       }
       topContentPlacement="outside"

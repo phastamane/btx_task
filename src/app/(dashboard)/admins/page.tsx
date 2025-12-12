@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Spinner } from "@heroui/react";
 import AdminsTable from "@/components/admins/AdminsTable";
 import { ADMINS_CONST } from "@/shared/constants/admins.constants";
-
+import AdminsTableMobile from "@/components/admins/AdminsTableMobile";
 import { I18nProvider } from "@react-aria/i18n";
 import Modal from "@/components/ui/Modal";
 import { useAdminStore } from "@/store/admin.store";
@@ -42,20 +42,40 @@ function AdminPage() {
   }
   return (
     <>
-        <I18nProvider locale='ru-RU'>
-          <div>
-            <div className="grid gap-3 mb-10">
-              <div className="flex justify-between">
-                <h1 className="text-3xl font-semibold">{ADMINS_CONST.title}</h1>
-                <Modal page="admins"/>
-              </div>
-              <p className="text-gray-700 text-lg">{ADMINS_CONST.subTitle}</p>
+      <I18nProvider locale="ru-RU">
+        <div>
+          <div className="grid gap-3 mb-10 max-xl:px-0">
+            <div className="flex justify-between max-xl:flex-col  max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5">
+              <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">
+                {ADMINS_CONST.title}
+              </h1>
+              <p className="xl:hidden text-gray-700 text-lg max-sm:text-sm max-sm:mr-auto">
+                {ADMINS_CONST.subTitle}
+              </p>
+              {
+                <div className="max-sm:w-full">
+                  <Modal page="users" />
+                </div>
+              }
             </div>
-      
-            {adminList && <AdminsTable admins={adminList} /> }
+            <p className="max-xl:hidden text-gray-700 text-lg ">
+              {ADMINS_CONST.subTitle}
+            </p>
           </div>
-        </I18nProvider>
-      
+
+          {adminList && (
+            <>
+              <div className="hidden lg:block">
+                <AdminsTable admins={adminList} />
+              </div>
+
+              <div className="lg:hidden">
+                <AdminsTableMobile admins={adminList} />
+              </div>
+            </>
+          )}
+        </div>
+      </I18nProvider>
     </>
   );
 }

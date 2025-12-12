@@ -7,7 +7,7 @@ export const COMMENTS_COLUMNS = [
 
 
 export const COMMENTS_CONST = {
-    backTitle: '🠔  Назад к списку публикаций',
+    backTitle: 'Назад к списку публикаций',
     title: 'Комментарии к посту',
 
 }

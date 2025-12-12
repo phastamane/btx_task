@@ -5,10 +5,12 @@ export default function InputSearch({
   filterValue,
   setFilterValue,
   setPage,
+  placeholder,
 }: {
   filterValue: string;
   setFilterValue: (v: string) => void;
   setPage: (n: number) => void;
+  placeholder?: string;
 }) {
   const onSearchChange = (value?: string) => {
     setFilterValue(value ?? "");
@@ -21,9 +23,10 @@ export default function InputSearch({
       classNames={{
         label: "text-black/50 dark:text-white/90",
         input: "text-black/90 dark:text-white/90",
-        inputWrapper: ["bg-white", "w-2/5"],
+        inputWrapper: ["bg-white", "w-full"],
+        base: "w-full",
       }}
-      placeholder="Поиск по публикациям"
+      placeholder={placeholder ?? "Поиск"}
       radius="lg"
       value={filterValue}
       onValueChange={onSearchChange}

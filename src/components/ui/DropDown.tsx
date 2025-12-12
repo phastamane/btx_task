@@ -9,7 +9,7 @@ import {
   useDisclosure
 } from "@heroui/react";
 
-import { DeleteIcon, EditIcon } from "../icons/Icons";
+import { DeleteIcon, DotsIcon, EditIcon } from "../icons/Icons";
 import { useLocalUsersStore } from "@/store/localUsers.store";
 
 import EditUserModal from "./EditUserModal";
@@ -33,8 +33,8 @@ export default function DropDown({ user }: { user: UserInterface }) {
 
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="ghost" className="min-w-6 px-4 py-1">
-            ...
+          <Button variant="ghost" className="min-w-6 px-4 py-1 border-none text-xl">
+            <DotsIcon/>
           </Button>
         </DropdownTrigger>
 

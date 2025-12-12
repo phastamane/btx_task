@@ -103,7 +103,7 @@ export default function UsersTable({
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page]);
+  }, [sortedPosts, page, rowsPerPage]);
 
   return (
     <Table
@@ -122,6 +122,7 @@ export default function UsersTable({
           filterValue={filterValue}
           setFilterValue={setFilterValue}
           setPage={setPage}
+          placeholder="Поиск по пользователям"
         />
       }
       topContentPlacement="outside"

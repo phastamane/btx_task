@@ -9,6 +9,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { useComments } from "@/hooks/useComments";
 import { useUserStore } from "@/store/user.store";
 import { useUsersFull } from "@/store/useUsersFull";
+import UsersTableMobile from "@/components/users/UsersTableMobile";
 
 function UsersPage() {
   const {
@@ -45,21 +46,34 @@ function UsersPage() {
     <>
       <I18nProvider locale="ru-RU">
         <div>
-          <div className="grid gap-3 mb-10">
-            <div className="flex justify-between">
-              <h1 className="text-3xl font-semibold">{USERS_CONST.title}</h1>
-              {user?.role === 'admin' && <Modal page="users" />}
+          <div className="grid gap-3 mb-10 max-xl:px-0">
+            <div className="flex justify-between max-xl:flex-col  max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5">
+              <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">{USERS_CONST.title}</h1>
+              <p className="xl:hidden text-gray-700 text-lg max-sm:text-sm max-sm:mr-auto">{USERS_CONST.subTitle}</p>
+              {user?.role === 'admin' && <div className="max-sm:w-full"><Modal page="users" /></div>}
             </div>
-            <p className="text-gray-700 text-lg">{USERS_CONST.subTitle}</p>
+            <p className="max-xl:hidden text-gray-700 text-lg">{USERS_CONST.subTitle}</p>
           </div>
 
           {users && usersPostsMap.size > 0 && userCommentsMap.size > 0 && (
-            <UsersTable
-              users={users}
-              admins={admins}
-              usersPosts={usersPostsMap}
-              userComments={userCommentsMap}
-            />
+            <>
+              <div className="hidden xl:block">
+                <UsersTable
+                  users={users}
+                  admins={admins}
+                  usersPosts={usersPostsMap}
+                  userComments={userCommentsMap}
+                />
+              </div>
+              <div className="xl:hidden">
+                <UsersTableMobile
+                  users={users}
+                  admins={admins}
+                  usersPosts={usersPostsMap}
+                  userComments={userCommentsMap}
+                />
+              </div>
+            </>
           )}
         </div>
       </I18nProvider>

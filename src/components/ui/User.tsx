@@ -18,11 +18,11 @@ export default function User() {
         src: user?.image,
       }}
       description={
-        <a className='text-blue-500 cursor-pointer text-base' onClick={() => router.push("/account")}>
+        <a className='text-blue-500 cursor-pointer text-base max-sm:text-xs' onClick={() => router.push("/account")}>
           @{user?.username}
         </a>
       }
-      name={user?.firstName + " " + user?.lastName}
+      name={<p className="max-sm:text-xs">{user?.firstName + " " + user?.lastName}</p>}
     />
   );
 }

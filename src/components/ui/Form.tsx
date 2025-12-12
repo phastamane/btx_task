@@ -17,6 +17,9 @@ const TEXTS = {
 
 export default function AuthForm() {
   const [error, setError] = React.useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>(
+    {}
+  );
   const [isVisible, setIsVisible] = React.useState(false);
   const setUser = useUserStore((s) => s.setUser);
   const user = useUserStore((s) => s.user)
@@ -33,10 +36,23 @@ export default function AuthForm() {
         e.preventDefault();
         setError(null);
 
-        let data = Object.fromEntries(new FormData(e.currentTarget));
+        const formData = new FormData(e.currentTarget);
+        const username = (formData.get("username") ?? "").toString().trim();
+        const password = (formData.get("password") ?? "").toString().trim();
+
+        const errors: Record<string, string> = {};
+        if (!username) errors.username = "Введите логин";
+        if (!password) errors.password = "Введите пароль";
+
+        if (Object.keys(errors).length > 0) {
+          setFieldErrors(errors);
+          return;
+        }
+
+        setFieldErrors({});
 
         try {
-          const res = await axios.post("/api/auth/login", data);
+          const res = await axios.post("/api/auth/login", { username, password });
           setUser(res.data.user);
           router.push("/posts");
           console.log("SERVER RESPONSE:", res.data);
@@ -48,15 +64,17 @@ export default function AuthForm() {
       }}
     >
       <Input
-        errorMessage="Введите корректное имя"
         label={TEXTS.USERNAME_LABEL}
         labelPlacement="outside"
         name="username"
         placeholder={TEXTS.USERNAME_PLACEHOLDER}
         type="text"
+        isInvalid={!!fieldErrors.username}
+        errorMessage={fieldErrors.username}
         classNames={{
-          inputWrapper: "bg-white border border-gray-200 text-base",
-          input: "text-base",
+          inputWrapper: "bg-white border-2 border-gray-300 text-base",
+          input: "text-base text-gray-200",
+          label: '!text-gray-500',
         }}
       />
 
@@ -81,9 +99,12 @@ export default function AuthForm() {
         placeholder={TEXTS.PASSWORD_PLACEHOLDER}
         type={isVisible ? "text" : "password"}
         variant="bordered"
+        isInvalid={!!fieldErrors.password}
+        errorMessage={fieldErrors.password}
         classNames={{
-          inputWrapper: "bg-white border border-gray-200 text-base",
+          inputWrapper: "bg-white border-2 border-gray-300 text-base",
           input: "text-base",
+          label: '!text-gray-500',
         }}
       />
 

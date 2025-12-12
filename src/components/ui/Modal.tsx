@@ -17,7 +17,7 @@ export default function Modal({page}:{page:string}) {
 
   return (
     <>
-      <Button onPress={onOpen} startContent={<Plus/>} color="primary">{page === 'admins' ? ADMINS_CONST.button : USERS_CONST.button}</Button>
+      <Button className="w-full" onPress={onOpen} startContent={<Plus/>} color="primary">{page === 'admins' ? ADMINS_CONST.button : USERS_CONST.button}</Button>
       <HeroUIModal isOpen={isOpen} onOpenChange={onOpenChange} className="py-4 px-2 rounded-3xl" classNames={{
         closeButton: "top-3 end-5 text-2xl"
       }} >
