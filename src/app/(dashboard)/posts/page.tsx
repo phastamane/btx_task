@@ -53,11 +53,11 @@ function UserPage() {
   }
   return (
     <div>
-      <div className="flex justify-between max-xl:flex-col  max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5 max-sm:mb-5">
+      <div className="flex flex-col gap-5 mb-10 max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5 max-sm:mb-5">
         <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">
           {POSTS_CONST.title}
         </h1>
-        <p className="xl:hidden text-gray-700 text-lg max-sm:text-sm max-sm:mr-auto">
+        <p className="max-lg:hidden text-gray-700 text-lg max-sm:text-sm max-sm:mr-auto">
           {POSTS_CONST.subTitle}
         </p>
       </div>

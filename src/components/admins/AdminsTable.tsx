@@ -7,86 +7,33 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  SortDescriptor,
-  getKeyValue,
 } from "@heroui/react";
 
-import React, { useState } from "react";
 import type { UserInterface } from "@/types/users";
 import InputSearch from "../ui/Input";
 import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { ADMINS_COLUMNS } from "@/shared/constants/admins.constants";
-import { SortableColumnAdmins } from "@/types/sortableColumn";
-import { formatDateRu, pluralAge } from "@/utils/formatDate";
-import DropDown from "../ui/DropDown";
+import { adminsRenderCell } from "./adminsRenderCell";
+import { useAdminsTable } from "@/hooks/useAdminsTable";
 
 export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "id",
-    direction: "ascending",
-  });
-
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(12);
-
-  const [filterValue, setFilterValue] = React.useState("");
-
-  const filteredPosts = React.useMemo(() => {
-    if (!filterValue.trim()) return admins;
-
-    return admins.filter((admin) => {
-      const expression =
-        `${admin.firstName} ${admin.lastName} ${admin.email}`.toLowerCase();
-      return expression.includes(filterValue.toLowerCase());
-    });
-  }, [filterValue, admins]);
-
-  const sortedPosts = React.useMemo(() => {
-    const sorted = [...filteredPosts];
-
-    sorted.sort((a, b) => {
-      const col = sortDescriptor.column as string;
-      let x: any;
-      let y: any;
-
-      switch (col) {
-        case "birthInfo":
-          x = new Date(a.birthDate).getTime();
-          y = new Date(b.birthDate).getTime();
-          break;
-        case "gender":
-          x = a.gender;
-          y = b.gender;
-          break;
-        case "id":
-          x = a.id;
-          y = b.id;
-          break;
-        default:
-          x = a[col as keyof UserInterface];
-          y = b[col as keyof UserInterface];
-      }
-
-      if (x < y) return -1;
-      if (x > y) return 1;
-      return 0;
-    });
-
-    if (sortDescriptor.direction === "descending") sorted.reverse();
-
-    return sorted;
-  }, [filteredPosts, sortDescriptor]);
-  const pageCount = Math.ceil(filteredPosts.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page, rowsPerPage]);
+  const {
+    items,
+    page,
+    pageCount,
+    rowsPerPage,
+    filterValue,
+    sortDescriptor,
+    setPage,
+    setRowsPerPage,
+    setFilterValue,
+    setSortDescriptor,
+  } = useAdminsTable(admins);
 
   return (
     <Table
-      aria-label="Table"
+      aria-label="Admins table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       classNames={{
@@ -94,7 +41,7 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
         base: "max-h-full",
         th: "text-gray-500 bg-white font-sm",
         tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
-        wrapper: 'pt-0'
+        wrapper: "pt-0",
       }}
       topContent={
         <InputSearch
@@ -106,13 +53,12 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
       }
       topContentPlacement="outside"
       bottomContent={
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <SelectPage
             rowsPerPage={rowsPerPage}
             setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
-
           <Pagination page={page} setPage={setPage} pageCount={pageCount} />
         </div>
       }
@@ -127,58 +73,13 @@ export default function AdminsTable({ admins }: { admins: UserInterface[] }) {
       </TableHeader>
 
       <TableBody items={items} emptyContent="Ничего не найдено">
-        {(item: UserInterface) => (
+        {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => {
-              switch (columnKey) {
-                case "fullName":
-                  return (
-                    <TableCell>
-                      <div className="flex gap-2 items-center min-h-6">
-                        {item?.image ? (
-                          <img
-                            className="max-w-6"
-                            src={item.image}
-                            alt="User avatar"
-                          />
-                        ) : (
-                          <img
-                            className="max-w-6"
-                            src="/no-avatar-user.svg"
-                            alt="Cant such user avatar"
-                          />
-                        )}
-
-                        <p className="font-semibold">{`${item.firstName} ${item.lastName}`}</p>
-                      </div>
-                    </TableCell>
-                  );
-                case "birthInfo":
-                  return (
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <p>{formatDateRu(item.birthDate)}</p>
-                        <p className="text-gray-600">({pluralAge(item.age)})</p>
-                      </div>
-                    </TableCell>
-                  );
-                case "actions":
-                  return (
-                    <TableCell>
-                      <DropDown user={item} />
-                    </TableCell>
-                  );
-                case "gender":
-                  return (
-                    <TableCell>
-                      {item.gender === "male" ? "Мужской" : "Женский"}
-                    </TableCell>
-                  );
-
-                default:
-                  return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
-              }
-            }}
+            {(columnKey) => (
+              <TableCell>
+                {adminsRenderCell(item, columnKey)}
+              </TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>

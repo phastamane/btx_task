@@ -7,23 +7,20 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Spinner,
-  SortDescriptor,
-  getKeyValue,
 } from "@heroui/react";
 
-import React from "react";
 import type { DataTableType, Post } from "@/types/posts";
 import type { UserTableType } from "@/types/users";
 import type { CommentTableType } from "@/types/comments";
-import type { SortableColumnPosts } from "@/types/sortableColumn";
 import InputSearch from "../ui/Input";
 import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { POST_COLUMNS } from "@/shared/constants/posts.constants";
 import { postsRenderCell } from "./postsRenderCell";
+import { usePostsTable } from "@/hooks/usePostsTable";
 import { useRouter } from "next/navigation";
 import { ArrowIcon } from "../icons/Icons";
+
 export default function PostsTable({
   posts,
   users,
@@ -33,77 +30,24 @@ export default function PostsTable({
   users: UserTableType;
   comments: CommentTableType;
 }) {
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "id",
-    direction: "ascending",
-  });
-
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(12);
-
-  const [filterValue, setFilterValue] = React.useState("");
-
-  // -----------------------------
-  // ФИЛЬТРАЦИЯ
-  // -----------------------------
-  const filteredPosts = React.useMemo(() => {
-    if (!filterValue.trim()) return posts;
-
-    return posts.filter((p) =>
-      p.title.toLowerCase().includes(filterValue.toLowerCase())
-    );
-  }, [posts, filterValue]);
-
-  //Cортировка
-  const sortedPosts = React.useMemo(() => {
-    const sorted = [...filteredPosts];
-
-    sorted.sort((a, b) => {
-      const col = sortDescriptor.column as SortableColumnPosts;
-
-      let x: any;
-      let y: any;
-
-      switch (col) {
-        case "likes":
-          x = a.reactions.likes;
-          y = b.reactions.likes;
-          break;
-
-        case "comments":
-          x = comments.get(a.id)?.comments.length ?? 0;
-          y = comments.get(b.id)?.comments.length ?? 0;
-          break;
-
-        default:
-          x = a[col];
-          y = b[col];
-      }
-
-      if (x < y) return -1;
-      if (x > y) return 1;
-      return 0;
-    });
-
-    if (sortDescriptor.direction === "descending") sorted.reverse();
-
-    return sorted;
-  }, [filteredPosts, sortDescriptor, comments]);
-  // -----------------------------
-  // ПАГИНАЦИЯ
-  // -----------------------------
-  const pageCount = Math.ceil(filteredPosts.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page, rowsPerPage]);
+  const {
+    items,
+    page,
+    pageCount,
+    rowsPerPage,
+    filterValue,
+    sortDescriptor,
+    setPage,
+    setRowsPerPage,
+    setFilterValue,
+    setSortDescriptor,
+  } = usePostsTable(posts, comments);
 
   const router = useRouter();
 
   return (
     <Table
-      aria-label="Table"
+      aria-label="Posts table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       classNames={{
@@ -123,13 +67,12 @@ export default function PostsTable({
       }
       topContentPlacement="outside"
       bottomContent={
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <SelectPage
             rowsPerPage={rowsPerPage}
             setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
-
           <Pagination page={page} setPage={setPage} pageCount={pageCount} />
         </div>
       }
@@ -154,30 +97,24 @@ export default function PostsTable({
       <TableBody items={items} emptyContent="Ничего не найдено">
         {(item: Post) => (
           <TableRow key={item.id}>
-            {(columnKey) => {
-              switch (columnKey) {
-                case "button":
-                  return (
-                    <TableCell>
-                      {
-                        <div
-                          onClick={() =>
-                            router.push(`/posts/${item.id}/comments`)
-                          }
-                        >
-                          <ArrowIcon />
-                        </div>
-                      }
-                    </TableCell>
-                  );
-                default:
-                  return (
-                    <TableCell>
-                      {postsRenderCell(item, columnKey, users, comments)}
-                    </TableCell>
-                  );
-              }
-            }}
+            {(columnKey) =>
+              columnKey === "button" ? (
+                <TableCell>
+                  <div
+                    onClick={() =>
+                      router.push(`/posts/${item.id}/comments`)
+                    }
+                    className="cursor-pointer"
+                  >
+                    <ArrowIcon />
+                  </div>
+                </TableCell>
+              ) : (
+                <TableCell>
+                  {postsRenderCell(item, columnKey, users, comments)}
+                </TableCell>
+              )
+            }
           </TableRow>
         )}
       </TableBody>

@@ -12,6 +12,14 @@ export async function POST(req: Request) {
       body: JSON.stringify(body),
     });
 
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => null);
+      return new Response(
+        JSON.stringify({ error: errorBody?.message ?? "Login failed" }),
+        { status: res.status || 400 }
+      );
+    }
+
     const data = await res.json();
 
     // Получаем полные данные о юзере
@@ -38,19 +46,20 @@ export async function POST(req: Request) {
     // HTTP ONLY TOKEN
     cookieStore.set("accessToken", data.accessToken, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       path: "/",
     });
 
     cookieStore.set("refreshToken", data.refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       path: "/",
     });
 
-    // Клиентский cookie с данными пользователя
+    // HttpOnly cookie с данными пользователя
     cookieStore.set("user", JSON.stringify(user), {
-      httpOnly: false,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       path: "/",
     });
 

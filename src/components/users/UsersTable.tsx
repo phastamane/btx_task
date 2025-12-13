@@ -7,10 +7,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  SortDescriptor,
 } from "@heroui/react";
 
-import React from "react";
 import type { UserInterface } from "@/types/users";
 import type { Post } from "@/types/posts";
 import type { CommentItem } from "@/types/comments";
@@ -18,8 +16,8 @@ import InputSearch from "../ui/Input";
 import Pagination from "../ui/Pagination";
 import SelectPage from "../ui/SelectPage";
 import { USERS_COLUMNS } from "@/shared/constants/users.constants";
-import { SortableColumnUsers } from "@/types/sortableColumn";
 import { usersRenderCell } from "./usersRenderCell";
+import { useUsersTable } from "@/hooks/useUsersTable";
 
 export default function UsersTable({
   users,
@@ -28,86 +26,26 @@ export default function UsersTable({
   userComments,
 }: {
   users: UserInterface[];
-  admins: UserInterface[]
+  admins: UserInterface[];
   usersPosts: Map<number, { post: Post[]; likes: number }>;
   userComments: Map<number, { comments: CommentItem[] }>;
 }) {
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "id",
-    direction: "ascending",
-  });
-
-  const usersArr = [...admins, ...users]
-  .filter((user, index, arr) => 
-    index === arr.findIndex(u => u.id === user.id)
-  );
-
-
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(12);
-
-  const [filterValue, setFilterValue] = React.useState("");
-
-  const filteredPosts = React.useMemo(() => {
-    if (!filterValue.trim()) return usersArr;
-
-    return usersArr.filter((user) => {
-      const expression =
-        `${user.firstName} ${user.lastName} ${user.email}`.toLowerCase();
-      return expression.includes(filterValue.toLowerCase());
-    });
-  }, [filterValue, usersArr]);
-
-  const sortedPosts = React.useMemo(() => {
-    const sorted = [...filteredPosts];
-
-    sorted.sort((a, b) => {
-      const col = sortDescriptor.column as SortableColumnUsers;
-
-      if (col === "likes") {
-        return (
-          (usersPosts.get(a.id)?.likes ?? 0) -
-          (usersPosts.get(b.id)?.likes ?? 0)
-        );
-      }
-
-      if (col === "posts") {
-        return (
-          (usersPosts.get(a.id)?.post.length ?? 0) -
-          (usersPosts.get(b.id)?.post.length ?? 0)
-        );
-      }
-
-      if (col === "comments") {
-        return (
-          (userComments.get(a.id)?.comments.length ?? 0) -
-          (userComments.get(b.id)?.comments.length ?? 0)
-        );
-      }
-
-      const x = a[col];
-      const y = b[col];
-
-      if (x < y) return -1;
-      if (x > y) return 1;
-      return 0;
-    });
-
-    if (sortDescriptor.direction === "descending") sorted.reverse();
-
-    return sorted;
-  }, [filteredPosts, sortDescriptor, usersPosts, userComments]);
-
-  const pageCount = Math.ceil(filteredPosts.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    return sortedPosts.slice(start, start + rowsPerPage);
-  }, [sortedPosts, page, rowsPerPage]);
+  const {
+    items,
+    page,
+    pageCount,
+    rowsPerPage,
+    filterValue,
+    sortDescriptor,
+    setPage,
+    setRowsPerPage,
+    setFilterValue,
+    setSortDescriptor,
+  } = useUsersTable(users, admins, usersPosts, userComments);
 
   return (
     <Table
-      aria-label="Table"
+      aria-label="Users table"
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       classNames={{
@@ -127,13 +65,12 @@ export default function UsersTable({
       }
       topContentPlacement="outside"
       bottomContent={
-        <div className="flex w-full justify-between ">
+        <div className="flex w-full justify-between">
           <SelectPage
             rowsPerPage={rowsPerPage}
             setRowsPerPage={setRowsPerPage}
             setPage={setPage}
           />
-
           <Pagination page={page} setPage={setPage} pageCount={pageCount} />
         </div>
       }
@@ -156,7 +93,7 @@ export default function UsersTable({
       </TableHeader>
 
       <TableBody items={items} emptyContent="Ничего не найдено">
-        {(item: UserInterface) => (
+        {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>

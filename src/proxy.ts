@@ -9,6 +9,11 @@ export default function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // Авторизованным не даём попасть на /sign-in
+  if (pathname === "/sign-in" && accessToken) {
+    return NextResponse.redirect(new URL("/posts", request.url));
+  }
+
   if (pathname === "/") {
     if (!accessToken) {
       return NextResponse.redirect(new URL("/sign-in", request.url));

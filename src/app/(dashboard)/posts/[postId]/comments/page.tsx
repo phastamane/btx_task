@@ -1,5 +1,4 @@
 "use client";
-import { use } from "react";
 import { Spinner } from "@heroui/react";
 import CommentsTable from "@/components/posts/CommetnsTable";
 import { COMMENTS_CONST } from "@/shared/constants/comments.constants";
@@ -10,9 +9,9 @@ import { useUsers } from "@/hooks/useUsers";
 import { usePosts } from "@/hooks/usePosts";
 import CommentsTableMobile from "@/components/posts/CommentsTableMobile";
 import { SimpleArrow } from "@/components/icons/Icons";
+import { Post } from "@/types/posts";
 
-function CommentsPage(props: { params: Promise<{ postId: string }> }) {
-  const params = use(props.params);
+function CommentsPage({ params }: { params: { postId: string } }) {
   const {
     commentsMap,
     isLoading: commentsLoading,
@@ -26,7 +25,11 @@ function CommentsPage(props: { params: Promise<{ postId: string }> }) {
     error: usersErrorData,
   } = useUsers();
 
-  const { posts } = usePosts();
+  const {
+    posts,
+    isError: postsError,
+    error: postsErrorData,
+  } = usePosts();
 
   const router = useRouter();
 
@@ -40,11 +43,13 @@ function CommentsPage(props: { params: Promise<{ postId: string }> }) {
     );
   }
 
-  if (commentsError) {
+  if (commentsError || postsError || usersError) {
     return (
       <div className="text-red-600 text-xl p-10">
         Ошибка загрузки данных:
         <pre>{commentsErrorData?.message}</pre>
+        <pre>{postsErrorData?.message}</pre>
+        <pre>{usersErrorData?.message}</pre>
       </div>
     );
   }
@@ -65,7 +70,7 @@ function CommentsPage(props: { params: Promise<{ postId: string }> }) {
               <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">{COMMENTS_CONST.title}</h1>
             </div>
             <p className="text-gray-600 text-lg max-xl:px-0 max-sm:text-sm">
-              {posts?.posts.find((p: { id: number }) => p.id === postId)?.title ?? ""}
+              {posts?.posts.find((p: Post) => p.id === postId)?.title ?? ""}
             </p>
           </div>
           {commentsMap && userMap && (

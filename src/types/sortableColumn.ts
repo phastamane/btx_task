@@ -7,7 +7,8 @@ export type SortableColumnAdmins =
   | "lastName"
   | "email"
   | "gender"
-  | "birthDate";
+  | "age"
+  | "birthInfo";
 
 export type SortableColumnUsers =
   | "age"
