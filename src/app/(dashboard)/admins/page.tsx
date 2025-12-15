@@ -44,7 +44,7 @@ function AdminPage() {
     <>
       <I18nProvider locale="ru-RU">
         <div>
-          <div className="grid gap-3 mb-10 max-xl:px-0">
+          <div className="grid gap-3 mb-5 max-xl:px-0">
             <div className="flex justify-between max-xl:flex-col  max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5">
               <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">
                 {ADMINS_CONST.title}
@@ -54,7 +54,7 @@ function AdminPage() {
               </p>
               {
                 <div className="max-sm:w-full">
-                  <Modal page="users" />
+                  <Modal page="admins" />
                 </div>
               }
             </div>

@@ -4,14 +4,13 @@ import { useState } from "react";
 import { useUserStore } from "@/store/user.store";
 import { role as userRole } from "@/shared/constants/role.constants";
 import { formatDateRu, pluralAge } from "@/utils/formatDate";
-import { ROLE_COLORS, ROLE_LABELS } from "@/shared/constants/roles.constants";
+import { ROLE_COLORS, ROLE_LABELS, UserRole } from "@/shared/constants/roles.constants";
 import type { UserInterface } from "@/types/users";
 import ChangePasswordModal from "@/components/ui/ChangePasswordModal";
 
 interface AccountClientProps {
   user: UserInterface | null;
 }
-type UserRole = "admin" | "moderator" | "user";
 
 export default function AccountClientMobile({
   user: initialUser,
@@ -30,7 +29,7 @@ export default function AccountClientMobile({
     fullName: `${user.firstName} ${user.maidenName} ${user.lastName}`,
     email: user.email,
     birthDate: user.birthDate,
-    role: user.role as UserRole,
+    role: user.role,
     username: user.username,
   });
 
@@ -39,14 +38,15 @@ export default function AccountClientMobile({
   const handleSave = () => {
     const [firstName, middleName, lastName] = form.fullName.split(" ");
 
-    const updatedUser = {
+    const updatedUser: UserInterface = {
       ...user,
       firstName: firstName || user.firstName,
       maidenName: middleName || user.maidenName,
       lastName: lastName || user.lastName,
       email: form.email,
       birthDate: String(form.birthDate),
-      role: form.role as UserRole,
+      role: form.role,
+      gender: user.gender,
       username: user.username,
     };
 
@@ -68,9 +68,9 @@ export default function AccountClientMobile({
           />
             <span
               className="text-sm w-fit px-2 py-1 rounded-lg"
-              style={{ backgroundColor: ROLE_COLORS[user.role as UserRole] }}
+              style={{ backgroundColor: ROLE_COLORS[user.role] }}
             >
-              {ROLE_LABELS[user.role as UserRole]}
+              {ROLE_LABELS[user.role]}
             </span>
             <h1 className="text-xl font-semibold">{fullName}</h1>
             <p className="text-sm text-blue-500 break-all">{user.email}</p>

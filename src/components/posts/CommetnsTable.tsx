@@ -76,19 +76,18 @@ export default function CommentsTable({
   }, [sortedComments, page, rowsPerPage]);
 
   return (
-    <div className="w-full overflow-x-auto">
-      <Table
-        aria-label="Table"
-        sortDescriptor={sortDescriptor}
-        onSortChange={setSortDescriptor}
-        classNames={{
-          table: "text-gray-800 min-w-[720px]",
-          base: "max-h-full",
-          th: "text-gray-500 bg-white font-sm",
-          tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
-          wrapper: "pt-0 overflow-x-auto",
-        }}
-        topContent={
+    <Table
+      aria-label="Table"
+      sortDescriptor={sortDescriptor}
+      onSortChange={setSortDescriptor}
+      classNames={{
+        table: "text-gray-800",
+        base: "max-h-full",
+        th: "text-gray-500 bg-white font-sm",
+        tr: "h-[54px] border-b-1 border-gray-200 last:border-b-0",
+        wrapper: "pt-0",
+      }}
+      topContent={
         <InputSearch
           filterValue={filterValue}
           setFilterValue={setFilterValue}
@@ -96,61 +95,60 @@ export default function CommentsTable({
           placeholder="Поиск по комментариям"
         />
       }
-        topContentPlacement="outside"
-        bottomContent={
-          <div className="flex w-full justify-between ">
-            <SelectPage
-              rowsPerPage={rowsPerPage}
-              setRowsPerPage={setRowsPerPage}
-              setPage={setPage}
-            />
+      topContentPlacement="outside"
+      bottomContent={
+        <div className="flex w-full justify-between ">
+          <SelectPage
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
+            setPage={setPage}
+          />
 
-            <Pagination page={page} setPage={setPage} pageCount={pageCount} />
-          </div>
-        }
-        bottomContentPlacement="outside"
-      >
-        <TableHeader columns={COMMENTS_COLUMNS}>
-          {(column) => (
-            <TableColumn
-              key={column.key}
-              align={column.key === "author" ? "start" : "start"}
-            >
-              {column.label}
-            </TableColumn>
-          )}
-        </TableHeader>
+          <Pagination page={page} setPage={setPage} pageCount={pageCount} />
+        </div>
+      }
+      bottomContentPlacement="outside"
+    >
+      <TableHeader columns={COMMENTS_COLUMNS}>
+        {(column) => (
+          <TableColumn
+            key={column.key}
+            align={column.key === "author" ? "start" : "start"}
+          >
+            {column.label}
+          </TableColumn>
+        )}
+      </TableHeader>
 
-        <TableBody items={items} emptyContent="Ничего не найдено">
-          {(item: CommentItem) => (
-            <TableRow key={item.id}>
-              {(columnKey) => {
-                switch (columnKey) {
-                  case "author": {
-                    const userItem = users.get(item.user.id);
-                    return (
-                      <TableCell>
-                        <div className="flex gap-2 items-center min-h-6">
-                          <img
-                            className="w-6 h-6 rounded-full object-cover"
-                            src={userItem?.image ?? "/no-avatar-user.svg"}
-                            alt="User avatar"
-                          />
-                          <p>{`${userItem?.firstName} ${
-                            userItem?.lastName?.[0] ?? ""
-                          }.`}</p>
-                        </div>
-                      </TableCell>
-                    );
-                  }
-                  default:
-                    return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
+      <TableBody items={items} emptyContent="Ничего не найдено">
+        {(item: CommentItem) => (
+          <TableRow key={item.id}>
+            {(columnKey) => {
+              switch (columnKey) {
+                case "author": {
+                  const userItem = users.get(item.user.id);
+                  return (
+                    <TableCell>
+                      <div className="flex gap-2 items-center min-h-6">
+                        <img
+                          className="w-6 h-6 rounded-full object-cover"
+                          src={userItem?.image ?? "/no-avatar-user.svg"}
+                          alt="User avatar"
+                        />
+                        <p>{`${userItem?.firstName} ${
+                          userItem?.lastName?.[0] ?? ""
+                        }.`}</p>
+                      </div>
+                    </TableCell>
+                  );
                 }
-              }}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+                default:
+                  return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
+              }
+            }}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

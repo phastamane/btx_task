@@ -1,22 +1,10 @@
 import { create } from "zustand";
-
-export interface AuthUser {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  maidenName: string;
-  age: number;
-  birthDate: string;
-  image: string;
-  role: string;
-}
+import { UserInterface } from "@/types/users";
 
 interface UserStore {
-  user: AuthUser | null;
+  user: UserInterface | null;
 
-  setUser: (user: AuthUser | null) => void;
+  setUser: (user: UserInterface | null) => void;
 
   clearUser: () => void;
 }

@@ -1,4 +1,5 @@
-"use client";
+"use client";;
+import { use } from "react";
 import { Spinner } from "@heroui/react";
 import CommentsTable from "@/components/posts/CommetnsTable";
 import { COMMENTS_CONST } from "@/shared/constants/comments.constants";
@@ -11,7 +12,8 @@ import CommentsTableMobile from "@/components/posts/CommentsTableMobile";
 import { SimpleArrow } from "@/components/icons/Icons";
 import { Post } from "@/types/posts";
 
-function CommentsPage({ params }: { params: { postId: string } }) {
+function CommentsPage(props: { params: Promise<{ postId: string }> }) {
+  const params = use(props.params);
   const {
     commentsMap,
     isLoading: commentsLoading,
@@ -86,6 +88,7 @@ function CommentsPage({ params }: { params: { postId: string } }) {
                 <CommentsTableMobile
                   comments={commentsMap.get(postId)?.comments ?? []}
                   users={userMap}
+                  
                 />
               </div>
             </>

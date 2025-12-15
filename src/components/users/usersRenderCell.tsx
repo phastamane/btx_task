@@ -5,6 +5,7 @@ import { Post } from "@/types/posts";
 import { CommentItem } from "@/types/comments";
 import { Key } from "@react-types/shared";
 import { Chip } from "@heroui/react";
+import { truncateText } from "@/utils/truncrcateText";
 
 export function usersRenderCell(
   user: UserInterface,
@@ -26,6 +27,15 @@ export function usersRenderCell(
         </div>
       );
 
+    case "email":
+      return (
+        <a
+          href={`mailto:${user.email}`}
+          className="text-sm text-blue-600 break-all hover:underline"
+        >
+          {truncateText(user.email, 28)}
+        </a>
+      );
     case "birthInfo":
       return (
         <div className="flex gap-1">

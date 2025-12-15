@@ -9,6 +9,7 @@ import { formatDateRu, pluralAge } from "@/utils/formatDate";
 import DropDown from "../ui/DropDown";
 import { ROLE_COLORS, ROLE_LABELS } from "@/shared/constants/roles.constants";
 import { EyeIcon, HeartIcon, PostIcon } from "../icons/Icons";
+import { truncateText } from "@/utils/truncrcateText";
 
 export default function UsersTableMobile({
   users,
@@ -23,10 +24,15 @@ export default function UsersTableMobile({
 }) {
   const [filterValue, setFilterValue] = useState("");
 
-  const combined = useMemo(
-    () => [...admins, ...users],
-    [admins, users]
-  );
+  const combined = useMemo(() => {
+    const map = new Map<number, UserInterface>();
+
+    [...admins, ...users].forEach((user) => {
+      map.set(user.id, user);
+    });
+
+    return Array.from(map.values());
+  }, [admins, users]);
 
   const filteredUsers = useMemo(() => {
     if (!filterValue.trim()) return combined;
@@ -63,7 +69,7 @@ export default function UsersTableMobile({
 
         return (
           <div
-            key={user.id}
+            key={`${user.id}-${user.firstName} ${user.lastName} ${user.email}`}
             className="bg-white border border-gray-200 p-4 shadow-sm flex flex-col"
           >
             <div className="flex justify-between items-start gap-3">
@@ -77,14 +83,18 @@ export default function UsersTableMobile({
                 >
                   {ROLE_LABELS[roleKey]}
                 </span>
-                <p className="text-sm text-blue-600 break-all">
-                  {user.email}
-                </p>
+                <a
+                  href={`mailto:${user.email}`}
+                  className="text-sm text-blue-600 break-all hover:underline"
+                >
+                  {truncateText(user.email, 20)}
+                </a>
+
                 <div className="text-sm text-gray-700">
                   <p className="text-xs text-gray-500">Дата рождения</p>
                   <p>
-                    {formatDateRu(String(user.birthDate))} ({pluralAge(user.age)}
-                    )
+                    {formatDateRu(String(user.birthDate))} (
+                    {pluralAge(user.age)})
                   </p>
                 </div>
                 <div className="text-sm text-gray-700">
@@ -98,15 +108,15 @@ export default function UsersTableMobile({
 
             <div className="flex gap-4 text-sm text-gray-700">
               <span className="flex items-center gap-1 text-gray-600">
-                <EyeIcon/>
+                <EyeIcon />
                 {likesCount}
               </span>
               <span className="flex items-center gap-1 text-gray-600">
-                <HeartIcon/>
+                <HeartIcon />
                 {postsCount}
               </span>
               <span className="flex items-center gap-1 text-gray-600">
-                <PostIcon/>
+                <PostIcon />
                 {commentsCount}
               </span>
             </div>

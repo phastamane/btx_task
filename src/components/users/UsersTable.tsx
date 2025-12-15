@@ -81,6 +81,11 @@ export default function UsersTable({
           <TableColumn
             key={column.key}
             allowsSorting={column.sorting}
+            className={
+              column.key === "email"
+                ? "min-w-[150px]"
+                : ""
+            }
             align={
               ["posts", "likes", "comments", "role"].includes(column.key)
                 ? "center"
@@ -96,7 +101,7 @@ export default function UsersTable({
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>
+              <TableCell key={`${item.id}-${columnKey}`}>
                 {usersRenderCell(item, columnKey, usersPosts, userComments)}
               </TableCell>
             )}

@@ -5,6 +5,7 @@ import { UserInterface } from "@/types/users";
 import { formatDateRu, pluralAge } from "@/utils/formatDate";
 import DropDown from "../ui/DropDown";
 import InputSearch from "../ui/Input";
+import { truncateText } from "@/utils/truncrcateText";
 
 export default function AdminsTableMobile({
   admins,
@@ -25,15 +26,15 @@ export default function AdminsTableMobile({
   }, [admins, filterValue]);
 
   return (
-  <div className="flex flex-col pb-24">
-    <div className="mb-5 px-5">
-      <InputSearch
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        setPage={() => {}}
-        placeholder="Поиск по администраторам"
-      />
-    </div>
+    <div className="flex flex-col pb-24">
+      <div className="mb-5 px-5">
+        <InputSearch
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+          setPage={() => {}}
+          placeholder="Поиск по администраторам"
+        />
+      </div>
 
       {/* Список */}
       {filteredAdmins.length === 0 && (
@@ -50,18 +51,21 @@ export default function AdminsTableMobile({
           {/* Header */}
           <div className="flex justify-between items-start">
             <div className="flex gap-3">
-              
-
               <div className="flex flex-col gap-2">
                 <img
-                src={item.image ?? "/no-avatar-user.svg"}
-                className="w-10 h-10 rounded-full object-cover"
-                alt=""
-              />
+                  src={item.image ?? "/no-avatar-user.svg"}
+                  className="w-10 h-10 rounded-full object-cover"
+                  alt=""
+                />
                 <p className="font-semibold text-base">
                   {item.firstName} {item.lastName}
                 </p>
-                <p className="text-sm text-blue-500">{item.email}</p>
+                <a
+                  href={`mailto:${item.email}`}
+                  className="text-sm text-blue-600 break-all hover:underline"
+                >
+                  {truncateText(item.email, 20)}
+                </a>
               </div>
             </div>
 
@@ -71,11 +75,11 @@ export default function AdminsTableMobile({
           {/* Meta */}
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-900">
             <span>
-               <p className="text-xs text-gray-600" >Дата рождения</p>
+              <p className="text-xs text-gray-600">Дата рождения</p>
               {formatDateRu(item.birthDate)} ({pluralAge(item.age)})
             </span>
             <span>
-                <p className="text-xs text-gray-600">Пол</p>
+              <p className="text-xs text-gray-600">Пол</p>
               {item.gender === "male" ? "Мужской" : "Женский"}
             </span>
           </div>

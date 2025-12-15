@@ -46,7 +46,7 @@ function UsersPage() {
     <>
       <I18nProvider locale="ru-RU">
         <div>
-          <div className="grid gap-3 mb-10 max-xl:px-0">
+          <div className="grid gap-3 mb-5 max-xl:px-0">
             <div className="flex justify-between max-xl:flex-col  max-xl:items-center max-xl:gap-5 max-xl:pt-5 max-sm:px-5">
               <h1 className="text-3xl font-semibold max-sm:text-xl  max-sm:mr-auto">{USERS_CONST.title}</h1>
               <p className="xl:hidden text-gray-700 text-lg max-sm:text-sm max-sm:mr-auto">{USERS_CONST.subTitle}</p>
@@ -57,7 +57,7 @@ function UsersPage() {
 
           {users && usersPostsMap.size > 0 && userCommentsMap.size > 0 && (
             <>
-              <div className="hidden xl:block">
+              <div className="hidden lg:block">
                 <UsersTable
                   users={users}
                   admins={admins}
@@ -65,7 +65,7 @@ function UsersPage() {
                   userComments={userCommentsMap}
                 />
               </div>
-              <div className="xl:hidden">
+              <div className="lg:hidden">
                 <UsersTableMobile
                   users={users}
                   admins={admins}

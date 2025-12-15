@@ -4,6 +4,7 @@ import { User as HeroUIUser } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user.store";
 import UserSkeleton from "./UserSkeleton";
+import { truncateText } from "@/utils/truncrcateText";
 
 export default function User() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function User() {
       }}
       description={
         <a className='text-blue-500 cursor-pointer text-base max-sm:text-xs' onClick={() => router.push("/account")}>
-          @{user?.username}
+          @{truncateText(user?.username, 12)}
         </a>
       }
       name={<p className="max-sm:text-xs">{user?.firstName + " " + user?.lastName}</p>}
